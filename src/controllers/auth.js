@@ -43,3 +43,29 @@ export const userRegistration = async (req, res) => {
 	}
   res.json({ status: 'ok' })
   }
+
+  // Đăng nhập
+export const userLogin = async (req, res) => {
+	const { name, password } = req.body;
+	const user = await User.findOne({ name }).lean()
+  
+	if (!user) {
+		  return res.json({ status: 'error', error: 'Invalid username/password' })
+	  }
+  
+	if (await bcrypt.compare(password, user.password)) {
+		  // the username, password combination is successful
+  
+		  const token = jwt.sign(
+			  {
+				  id: user._id,
+				  name: user.name
+			  },
+			  JWT_SECRET
+		  )
+  
+		  return res.json({ status: 'ok', data: token })
+	  }
+  
+	  res.json({ status: 'error', error: 'Invalid username/password' })
+  }
