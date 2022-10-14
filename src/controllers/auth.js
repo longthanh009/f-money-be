@@ -6,7 +6,7 @@ const JWT_SECRET = 'sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhf
 
 // Đăng ký
 export const userRegistration = async (req, res) => {
-    const { username, password: plainTextPassword, phone, CCCD, address} = req.body;
+    const { username, password: plainTextPassword,email, phone, CCCD, address} = req.body;
 
   if (!username || typeof username !== 'string') {
 		return res.json({ status: 'error', error: 'Tên đăng nhập không hợp lệ!' })
@@ -102,4 +102,21 @@ export const changePassword = async (req, res) => {
 		  console.log(error)
 		  res.json({ status: 'error', error: ';))' })
 	  }
+}
+
+export const signOut = async (req, res) => {
+	if (req.headers && req.headers.authorization) {
+		const token = req.headers.authorization.split(' ')[1];
+		if (!token) {
+		  return res
+			.status(401)
+			.json({ success: false, message: 'Authorization fail!' });
+		}
+		const tokens = req.user.tokens;
+
+    const newTokens = tokens.filter(t => t.token !== token);
+
+    await User.findByIdAndUpdate(req.user._id, { tokens: newTokens });
+    res.json({ success: true, message: 'Đăng xuất thành công!' });
+  }
 }
