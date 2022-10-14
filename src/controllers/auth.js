@@ -9,17 +9,17 @@ export const userRegistration = async (req, res) => {
     const { username, password: plainTextPassword, phone, CCCD, address} = req.body;
 
   if (!username || typeof username !== 'string') {
-		return res.json({ status: 'error', error: 'Invalid username' })
+		return res.json({ status: 'error', error: 'Tên đăng nhập không hợp lệ!' })
 	}
 
 	if (!plainTextPassword || typeof plainTextPassword !== 'string') {
-		return res.json({ status: 'error', error: 'Invalid password' })
+		return res.json({ status: 'error', error: 'Mật khẩu không hợp lệ!' })
 	};
 
   if (plainTextPassword.length < 5) {
 		return res.json({
 			status: 'error',
-			error: 'Password too small. Should be atleast 6 characters'
+			error: 'Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!'
 		});
 	}
 
@@ -33,11 +33,11 @@ export const userRegistration = async (req, res) => {
             CCCD,
             address
 		})
-		console.log('User created successfully: ', response)
+		console.log('Tài khoảng đăng ký thành công! : ', response)
 	} catch (error) {
 		if (error.code === 11000) {
 			// duplicate key
-			return res.json({ status: 'error', error: 'Username already in use' })
+			return res.json({ status: 'error', error: 'Tên tài khoản đã được sử dụng!' })
 		}
 		throw error
 	}
@@ -50,7 +50,7 @@ export const userLogin = async (req, res) => {
 	const user = await User.findOne({ name }).lean()
   
 	if (!user) {
-		  return res.json({ status: 'error', error: 'Invalid username/password' })
+		  return res.json({ status: 'error', error: 'Tên người dùng hoặc mật khẩu không hợp lệ!' })
 	  }
   
 	if (await bcrypt.compare(password, user.password)) {
@@ -67,7 +67,7 @@ export const userLogin = async (req, res) => {
 		  return res.json({ status: 'ok', data: token })
 	  }
   
-	  res.json({ status: 'error', error: 'Invalid username/password' })
+	  res.json({ status: 'error', error: 'Tên người dùng hoặc mật khẩu không hợp lệ!' })
   }
 
   // Đổi mật khẩu
@@ -75,13 +75,13 @@ export const changePassword = async (req, res) => {
 	const { token, newpassword: plainTextPassword } = req.body
   
 	  if (!plainTextPassword || typeof plainTextPassword !== 'string') {
-		  return res.json({ status: 'error', error: 'Invalid password' })
+		  return res.json({ status: 'error', error: 'Mật khẩu không hợp lệ!' })
 	  }
   
 	if (plainTextPassword.length < 5) {
 		  return res.json({
 			  status: 'error',
-			  error: 'Password too small. Should be atleast 6 characters'
+			  error: 'Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!'
 		  })
 	  }
 	try {

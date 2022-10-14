@@ -1,12 +1,6 @@
-import mongoose from "mongoose";
-
-const connectDB = async () => {
-  const res = await mongoose.connect(
-    "mongodb+srv://nhom2-assignment-nextjs:88888888@cluster0.fl3us.mongodb.net/DATN"
-  );
-  if (res) {
-    console.log("connected Successfully");
-  }
+export const createError = (status, message) => {
+  const err = new Error();
+  err.status = status;
+  err.message = message;
+  return err;
 };
-
-export default connectDB;
