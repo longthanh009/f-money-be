@@ -18,8 +18,8 @@ const UserSchema = new mongoose.Schema(
         type: Number,
     },
     Role: {
-    type: Number,
-    default: false,
+        type: Number,
+        default: false,
     },
     date: {
         type: Date,
