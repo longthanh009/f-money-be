@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import cors from "cors";
 import dotenv from "dotenv";
 import routeAuth from "./routes/auth.js"
+import routerService from "./routes/service";
 const app = express();
 
 app.use(cors());
@@ -23,7 +24,7 @@ app.get("/", (req, res) => {
 
 // Router
 app.use("/api/auth", routeAuth);
-
+app.use("/api", routerService);
 
 app.listen(PORT, () => {
     console.log(`APi is Running on http://localhost:${PORT}`);
