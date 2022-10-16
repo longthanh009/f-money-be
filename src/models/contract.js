@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 const Contract = new mongoose.Schema(
     {
         money_loan: {
-            type: Number, required: true
+            type: Number,
         },
         money_given: {
-            type: Number, required: true
+            type: Number,
         },
         closed_days: {
             type: Date,
