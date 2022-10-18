@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(morgan('tiny'));
 
 // Router
-
+app.use("/api", routerBank);
 
 // connect database MongoBb
 mongoose.connect("mongodb://localhost:27017/f-money-clc")
