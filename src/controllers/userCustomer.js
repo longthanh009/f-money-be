@@ -143,3 +143,14 @@ export const deleteUserCustomer = async (req,res)=>{
       res.status(500).json(err);
     }
 }
+
+// get/:id
+export const getUserCustomer = async (req,res)=>{
+  try {
+      const user = await userCustomer.findById(req.params.id);
+      const { password, ...others } = user._doc;
+      res.status(200).json(others);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+}
