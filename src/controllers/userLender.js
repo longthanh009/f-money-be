@@ -103,6 +103,7 @@ export const userLenderChangePassword = async (req, res) => {
 	  }
 }
 
+//updateUserLender
 export const updateUserLender = async (req,res)=>{
     try {
         const updatedUser = await userLender.findByIdAndUpdate(
@@ -117,3 +118,13 @@ export const updateUserLender = async (req,res)=>{
         res.status(500).json(err);
       }
   }
+
+// DELETEUserLender
+export const deleteUserLender = async (req,res)=>{
+        try {
+            await userLender.findByIdAndDelete(req.params.id);
+            res.status(200).json("Người dùng đã bị xóa ...");
+          } catch (err) {
+            res.status(500).json(err);
+          }
+        }
