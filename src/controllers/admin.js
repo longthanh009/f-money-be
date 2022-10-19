@@ -42,3 +42,28 @@ try {
 res.json({ status: 'ok' })
 }
 
+// Đăng nhập
+export const adminLogin = async (req, res) => {
+	const { username, password } = req.body;
+	const user = await Admin.findOne({ username }).lean()
+  
+	if (!user) {
+		  return res.json({ status: 'error', error: 'Tên đăng nhập hoặc tài khoản không hợp lệ!' })
+	  }
+  
+	if (await bcrypt.compare(password, user.password)) {
+		  // the username, password combination is successful
+  
+		  const token = jwt.sign(
+			  {
+				  id: user._id,
+				  name: user.username
+			  },
+			  JWT_SECRET
+		  )
+  
+		  return res.json({ status: 'ok', data: token })
+	  }
+  
+	  res.json({ status: 'error', error: 'Tên đăng nhập hoặc tài khoản không hợp lệ!' })
+  }
