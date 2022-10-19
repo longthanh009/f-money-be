@@ -142,7 +142,7 @@ export const getUserLender = async (req,res)=>{
   }
 
 // Get 
-export const getUsersLender = async (req,res,next)=>{
+export const getUsersLenders = async (req,res,next)=>{
     try {
       const users = await userLender.find();
       res.status(200).json(users);
@@ -150,3 +150,15 @@ export const getUsersLender = async (req,res,next)=>{
       next(err);
     }
   }
+
+export const logoutUsersLenders = async (req,res,next)=>{
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Đăng xuất thành công!",
+  });
+}
