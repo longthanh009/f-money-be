@@ -117,3 +117,19 @@ export const userCustomerChangePassword = async (req, res) => {
 		  res.json({ status: 'error', error: ';))' })
 	  }
 }
+
+//updateUserCustomer
+export const updateUserCustomer = async (req,res)=>{
+  try {
+      const updatedUser = await userCustomer.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+      res.status(200).json(updatedUser);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+}
