@@ -8,6 +8,6 @@ router.post("/userLender/change-password", userLenderChangePassword);
 router.put("/userLender/:id", updateUserLender);
 router.delete("/userLender/:id", deleteUserLender);
 router.get("/userLender/:id", getUserLender);
-// router.get("/userLender", getUsers);
+router.get("/userLender", getUsers);
 
 export default router;
