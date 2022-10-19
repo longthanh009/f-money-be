@@ -164,3 +164,15 @@ export const getUserCustomers = async (req,res,next)=>{
     next(err);
   }
 }
+
+export const logoutUsersCustomers = async (req,res,next)=>{
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Đăng xuất thành công!",
+  });
+}
