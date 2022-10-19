@@ -11,6 +11,7 @@ app.use(morgan('tiny'));
 
 // Router
 app.use("/api", routerBank);
+app.use("/api", routerService);
 
 // connect database MongoBb
 mongoose.connect("mongodb://localhost:27017/f-money-clc")
