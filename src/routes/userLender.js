@@ -2,14 +2,14 @@ import express from "express";
 import { deleteUserLender, getUserLender, getUsersLenders, logoutUsersLenders, updateUserLender, userLenderChangePassword, userLenderLogin, userLenderRegistration } from "../controllers/userLender";
 const router = express.Router();
 
-router.post("/userLender/register", userLenderRegistration);
-router.post("/userLender/login", userLenderLogin);
-router.post("/userLender/change-password", userLenderChangePassword);
-router.put("/userLender/:id", updateUserLender);
-router.delete("/userLender/:id", deleteUserLender);
-router.get("/userLender/:id", getUserLender);
-router.get("/userLender", getUsersLenders);
-router.get("/userLender/logout", logoutUsersLenders);
+router.post("/userCustomer/register", userLenderRegistration);
+router.post("/userCustomer/login", userLenderLogin);
+router.post("/userCustomer/change-password", userLenderChangePassword);
+router.put("/userCustomer/:id", updateUserLender);
+router.delete("/userCustomer/:id", deleteUserLender);
+router.get("/userCustomer/:id", getUserLender);
+router.get("/userCustomer", getUsersLenders);
+router.get("/userCustomer/logout", logoutUsersLenders);
 
 
 export default router;
