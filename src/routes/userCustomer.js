@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.post("/userCustomer/register", userCustomerRegistration);
 router.post("/userCustomer/login", userCustomerLogin);
-// router.post("/userCustomer/change-password", userLenderChangePassword);
+router.post("/userCustomer/change-password", userLenderChangePassword);
 // router.put("/userCustomer/:id", updateUserLender);
 // router.delete("/userCustomer/:id", deleteUserLender);
 // router.get("/userCustomer/:id", getUserLender);
