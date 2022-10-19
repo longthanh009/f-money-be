@@ -140,3 +140,13 @@ export const getUserLender = async (req,res)=>{
         res.status(500).json(err);
       }
   }
+
+// Get 
+export const getUsersLender = async (req,res,next)=>{
+    try {
+      const users = await userLender.find();
+      res.status(200).json(users);
+    } catch (err) {
+      next(err);
+    }
+  }
