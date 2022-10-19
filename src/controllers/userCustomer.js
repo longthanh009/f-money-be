@@ -154,3 +154,13 @@ export const getUserCustomer = async (req,res)=>{
       res.status(500).json(err);
     }
 }
+
+// Get 
+export const getUserCustomers = async (req,res,next)=>{
+  try {
+    const users = await userCustomer.find();
+    res.status(200).json(users);
+  } catch (err) {
+    next(err);
+  }
+}

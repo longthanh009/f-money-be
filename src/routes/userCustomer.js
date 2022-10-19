@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteUserCustomer, getUserCustomer, updateUserCustomer, userCustomerChangePassword, userCustomerLogin, userCustomerRegistration } from "../controllers/userCustomer";
+import { deleteUserCustomer, getUserCustomer, getUserCustomers, updateUserCustomer, userCustomerChangePassword, userCustomerLogin, userCustomerRegistration } from "../controllers/userCustomer";
 const router = express.Router();
 
 router.post("/userCustomer/register", userCustomerRegistration);
@@ -8,7 +8,7 @@ router.post("/userCustomer/change-password", userCustomerChangePassword);
 router.put("/userCustomer/:id", updateUserCustomer);
 router.delete("/userCustomer/:id", deleteUserCustomer);
 router.get("/userCustomer/:id", getUserCustomer);
-// router.get("/userCustomer", getUsersLenders);
+router.get("/userCustomer", getUserCustomers);
 // router.get("/userCustomer/logout", logoutUsersLenders);
 
 
