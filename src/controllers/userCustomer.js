@@ -133,3 +133,13 @@ export const updateUserCustomer = async (req,res)=>{
       res.status(500).json(err);
     }
 }
+
+// DELETEUserCustomer
+export const deleteUserCustomer = async (req,res)=>{
+  try {
+      await userCustomer.findByIdAndDelete(req.params.id);
+      res.status(200).json("Người dùng đã bị xóa ...");
+    } catch (err) {
+      res.status(500).json(err);
+    }
+}
