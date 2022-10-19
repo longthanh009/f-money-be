@@ -83,3 +83,37 @@ export const userCustomerLogin = async (req, res) => {
   
 	  res.json({ status: 'error', error: 'Tên người dùng hoặc mật khẩu không hợp lệ!' })
   }
+
+// Đổi mật khẩu
+export const userCustomerChangePassword = async (req, res) => {
+	const { token, newpassword: plainTextPassword } = req.body
+  
+	  if (!plainTextPassword || typeof plainTextPassword !== 'string') {
+		  return res.json({ status: 'error', error: 'Mật khẩu không hợp lệ!' })
+	  }
+  
+	if (plainTextPassword.length < 5) {
+		  return res.json({
+			  status: 'error',
+			  error: 'Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!'
+		  })
+	  }
+	try {
+		  const user = jwt.verify(token, JWT_SECRET)
+  
+		  const _id = user.id
+  
+		  const password = await bcrypt.hash(plainTextPassword, 10)
+  
+		  await userCustomer.updateOne(
+			  { _id },
+			  {
+				  $set: { password }
+			  }
+		  )
+		  res.json({ status: 'ok' })
+	  } catch (error) {
+		  console.log(error)
+		  res.json({ status: 'error', error: ';))' })
+	  }
+}
