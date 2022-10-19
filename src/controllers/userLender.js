@@ -127,4 +127,16 @@ export const deleteUserLender = async (req,res)=>{
           } catch (err) {
             res.status(500).json(err);
           }
-        }
+}
+
+
+// get/:id
+export const getUserLender = async (req,res)=>{
+    try {
+        const user = await userLender.findById(req.params.id);
+        const { password, ...others } = user._doc;
+        res.status(200).json(others);
+      } catch (err) {
+        res.status(500).json(err);
+      }
+  }
