@@ -102,3 +102,18 @@ export const userLenderChangePassword = async (req, res) => {
 		  res.json({ status: 'error', error: ';))' })
 	  }
 }
+
+export const updateUserLender = async (req,res)=>{
+    try {
+        const updatedUser = await userLender.findByIdAndUpdate(
+          req.params.id,
+          {
+            $set: req.body,
+          },
+          { new: true }
+        );
+        res.status(200).json(updatedUser);
+      } catch (err) {
+        res.status(500).json(err);
+      }
+  }
