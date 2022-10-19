@@ -1,15 +1,15 @@
 import express from "express";
-import { userCustomerRegistration } from "../controllers/userCustomer";
+import { userCustomerLogin, userCustomerRegistration } from "../controllers/userCustomer";
 const router = express.Router();
 
-router.post("/userLender/register", userCustomerRegistration);
-// router.post("/userLender/login", userLenderLogin);
-// router.post("/userLender/change-password", userLenderChangePassword);
-// router.put("/userLender/:id", updateUserLender);
-// router.delete("/userLender/:id", deleteUserLender);
-// router.get("/userLender/:id", getUserLender);
-// router.get("/userLender", getUsersLenders);
-// router.get("/userLender/logout", logoutUsersLenders);
+router.post("/userCustomer/register", userCustomerRegistration);
+router.post("/userCustomer/login", userCustomerLogin);
+// router.post("/userCustomer/change-password", userLenderChangePassword);
+// router.put("/userCustomer/:id", updateUserLender);
+// router.delete("/userCustomer/:id", deleteUserLender);
+// router.get("/userCustomer/:id", getUserLender);
+// router.get("/userCustomer", getUsersLenders);
+// router.get("/userCustomer/logout", logoutUsersLenders);
 
 
 export default router;
