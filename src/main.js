@@ -6,6 +6,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import adminAuth from "./routes/admin"
 import userLenderAuth from "./routes/userLender"
+import userCustomerAuth from "./routes/userCustomer"
 // import routeAuth from "./routes/use.js"
 const app = express();
 
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 // Router
 app.use("/api", adminAuth);
 app.use("/api", userLenderAuth);
+app.use("/api", userCustomerAuth);
 // app.use("/api/users", routeUsers);
 
 
