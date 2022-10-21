@@ -25,6 +25,8 @@ app.get("/", (req, res) => {
   });
 
 // Router
+app.use("/api", routerBank);
+app.use("/api", routerService);
 app.use("/api", adminAuth);
 app.use("/api", userLenderAuth);
 app.use("/api", userCustomerAuth);
