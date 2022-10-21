@@ -1,5 +1,5 @@
 import express from "express";
-import {userLenderRegistration,userLenderLogin,deleteUserLender, getUserLender, getUsersLenders, logoutUsersLenders, updateUserLender, userLenderChangePassword, userLenderLogin, userLenderRegistration } from "../controllers/userLender";
+import {deleteUserLender, getUserLender, getUsersLenders, logoutUsersLenders, updateUserLender, userLenderChangePassword, userLenderLogin, userLenderRegistration } from "../controllers/userLender.js";
 
 const router = express.Router();
 

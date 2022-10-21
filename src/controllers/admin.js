@@ -68,14 +68,14 @@ export const adminLogin = async (req, res) => {
 	  res.json({ status: 'error', error: 'Tên đăng nhập hoặc tài khoản không hợp lệ!' })
   }
 //  Log out admin
-export const adminLogout = catchAsyncErrors(async (req, res) => {
-    res.cookie("token", null, {
-      expires: new Date(Date.now()),
-      httpOnly: true,
-    });
+// export const adminLogout = catchAsyncErrors(async (req, res) => {
+//     res.cookie("token", null, {
+//       expires: new Date(Date.now()),
+//       httpOnly: true,
+//     });
   
-    res.status(200).json({
-      success: true,
-      message: "Đăng xuất thành công!",
-    });
-  });
+//     res.status(200).json({
+//       success: true,
+//       message: "Đăng xuất thành công!",
+//     });
+//   });
