@@ -7,6 +7,9 @@ import dotenv from "dotenv";
 import adminAuth from "./routes/admin"
 import userLenderAuth from "./routes/userLender"
 import userCustomerAuth from "./routes/userCustomer"
+import routerBank from "./routes/bankAccount";
+import routerService from "./routes/bankAccount";
+
 // import routeAuth from "./routes/use.js"
 const app = express();
 
