@@ -71,6 +71,14 @@ export const Login = async(req, res) => {
         return res.status(500).json({ status: err.message })
     }
 }
+export const logout = async(req, res) => {
+    try {
+        res.clearCookie('refreshtoken', { path: '/user/refresh_token' })
+        return res.json({ status: "Đăng xuất thành công!" })
+    } catch (err) {
+        return res.status(500).json({ status: err.message })
+    }
+}
 
 export const refreshToken = (req, res) => {
     try {
