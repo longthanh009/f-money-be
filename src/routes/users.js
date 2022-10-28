@@ -1,5 +1,5 @@
 import express from "express";
-import { getUsers, history, Login, logout, refreshToken, Registration, updateUsers, usersChangePassword } from "../controllers/auth";
+import { getUser, getUsers, history, Login, logout, refreshToken, Registration, updateUsers, usersChangePassword } from "../controllers/auth";
 
 const router = express.Router();
 
@@ -29,7 +29,7 @@ router.get('/history', history);
 router.post("/users/change-password", usersChangePassword);
 router.put("/users/:id", updateUsers);
 router.delete("/users/:id", );
-router.get("/users/:id", );
+router.get("/users/:id", getUser);
 router.get("/users", getUsers);
 
 

@@ -155,10 +155,20 @@ export const updateUsers = async(req, res) => {
     }
     // Get 
 export const getUsers = async(req, res, next) => {
+        try {
+            const users = await Users.find();
+            res.status(200).json(users);
+        } catch (err) {
+            next(err);
+        }
+    }
+    // get/:id
+export const getUser = async(req, res) => {
     try {
-        const users = await Users.find();
-        res.status(200).json(users);
+        const user = await Users.findById(req.params.id);
+        const { password, ...others } = user._doc;
+        res.status(200).json(others);
     } catch (err) {
-        next(err);
+        res.status(500).json(err);
     }
 }
