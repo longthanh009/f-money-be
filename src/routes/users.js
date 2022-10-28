@@ -1,5 +1,5 @@
 import express from "express";
-import { getUser, getUsers, history, Login, logout, refreshToken, Registration, updateUsers, usersChangePassword } from "../controllers/auth";
+import { deleteUsers, getUser, getUsers, history, Login, logout, refreshToken, Registration, updateUsers, usersChangePassword } from "../controllers/auth";
 
 const router = express.Router();
 
@@ -28,7 +28,7 @@ router.get('/users/refresh_token', refreshToken);
 router.get('/history', history);
 router.post("/users/change-password", usersChangePassword);
 router.put("/users/:id", updateUsers);
-router.delete("/users/:id", );
+router.delete("/users/:id", deleteUsers);
 router.get("/users/:id", getUser);
 router.get("/users", getUsers);
 
