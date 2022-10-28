@@ -142,14 +142,23 @@ export const usersChangePassword = async(req, res) => {
     }
     //updateUsers
 export const updateUsers = async(req, res) => {
+        try {
+            const updatedUser = await Users.findByIdAndUpdate(
+                req.params.id, {
+                    $set: req.body,
+                }, { new: true }
+            );
+            res.status(200).json(updatedUser);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    }
+    // Get 
+export const getUsers = async(req, res, next) => {
     try {
-        const updatedUser = await Users.findByIdAndUpdate(
-            req.params.id, {
-                $set: req.body,
-            }, { new: true }
-        );
-        res.status(200).json(updatedUser);
+        const users = await Users.find();
+        res.status(200).json(users);
     } catch (err) {
-        res.status(500).json(err);
+        next(err);
     }
 }
