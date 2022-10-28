@@ -37,6 +37,10 @@ const Users = new mongoose.Schema({
         default: false
     },
     TotalAmount: { type: String, default: "300000000" },
+    Contract: {
+        type: Array,
+        default: []
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Users", Users);
