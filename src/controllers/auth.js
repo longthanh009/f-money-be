@@ -112,31 +112,44 @@ export const history = async(req, res) => {
     }
     // Đổi mật khẩu
 export const usersChangePassword = async(req, res) => {
-    const { token, newpassword: plainTextPassword } = req.body
+        const { token, newpassword: plainTextPassword } = req.body
 
-    if (!plainTextPassword || typeof plainTextPassword !== 'string') {
-        return res.json({ status: 'error', error: 'Mật khẩu không hợp lệ!' })
-    }
+        if (!plainTextPassword || typeof plainTextPassword !== 'string') {
+            return res.json({ status: 'error', error: 'Mật khẩu không hợp lệ!' })
+        }
 
-    if (plainTextPassword.length < 5) {
-        return res.json({
-            status: 'error',
-            error: 'Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!'
-        })
+        if (plainTextPassword.length < 5) {
+            return res.json({
+                status: 'error',
+                error: 'Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!'
+            })
+        }
+        try {
+            const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+
+            const _id = user.id
+
+            const password = await bcrypt.hash(plainTextPassword, 10)
+
+            await userCustomer.updateOne({ _id }, {
+                $set: { password }
+            })
+            res.json({ status: 'ok' })
+        } catch (error) {
+            console.log(error)
+            res.json({ status: 'error', error: ';))' })
+        }
     }
+    //updateUsers
+export const updateUsers = async(req, res) => {
     try {
-        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-
-        const _id = user.id
-
-        const password = await bcrypt.hash(plainTextPassword, 10)
-
-        await userCustomer.updateOne({ _id }, {
-            $set: { password }
-        })
-        res.json({ status: 'ok' })
-    } catch (error) {
-        console.log(error)
-        res.json({ status: 'error', error: ';))' })
+        const updatedUser = await Users.findByIdAndUpdate(
+            req.params.id, {
+                $set: req.body,
+            }, { new: true }
+        );
+        res.status(200).json(updatedUser);
+    } catch (err) {
+        res.status(500).json(err);
     }
 }
