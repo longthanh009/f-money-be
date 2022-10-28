@@ -142,27 +142,19 @@ export const usersChangePassword = async(req, res) => {
     }
     //updateUsers
 export const updateUsers = async(req, res) => {
-        try {
-            const updatedUser = await Users.findByIdAndUpdate(
-                req.params.id, {
-                    $set: req.body,
-                }, { new: true }
-            );
-            res.status(200).json(updatedUser);
-        } catch (err) {
-            res.status(500).json(err);
-        }
+    try {
+        const updatedUser = await Users.findByIdAndUpdate(
+            req.params.id, {
+                $set: req.body,
+            }, { new: true }
+        );
+        res.status(200).json(updatedUser);
+    } catch (err) {
+        res.status(500).json(err);
     }
-    // Get 
-export const getUsers = async(req, res, next) => {
-        try {
-            const users = await Users.find();
-            res.status(200).json(users);
-        } catch (err) {
-            next(err);
-        }
-    }
-    // get/:id
+}
+
+// get/:id
 export const getUser = async(req, res) => {
         try {
             const user = await Users.findById(req.params.id);
@@ -172,12 +164,41 @@ export const getUser = async(req, res) => {
             res.status(500).json(err);
         }
     }
-    // DELETEUsers
+    // deleteUsers
 export const deleteUsers = async(req, res) => {
-    try {
-        await Users.findByIdAndDelete(req.params.id);
-        res.status(200).json("Người dùng đã bị xóa ...");
-    } catch (err) {
-        res.status(500).json(err);
+        try {
+            await Users.findByIdAndDelete(req.params.id);
+            res.status(200).json("Người dùng đã bị xóa ...");
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    }
+    // Get - phân trang
+const PAGE_SIZE = 5 //có 5 phần tử trong page
+export const getUsers = async(req, res, next) => {
+    var page = req.query.page;
+
+    if (page) {
+        //get page
+        page = parseInt(page)
+        if (page < 0) {
+            page = 1
+        }
+        var soLuongBoQua = (page - 1) * PAGE_SIZE;
+
+
+        await Users.find().skip(soLuongBoQua).limit(PAGE_SIZE)
+            .then(users => {
+                res.status(200).json(users);
+            }).catch(err => {
+                res.status(500).json("Lỗi server!");
+            })
+    } else {
+        try {
+            const users = await Users.find();
+            res.status(200).json(users);
+        } catch (err) {
+            next(err);
+        }
     }
 }
