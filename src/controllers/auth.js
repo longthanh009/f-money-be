@@ -4,6 +4,7 @@ import { createAccessToken, createRefreshToken } from "../middlewares/jwtToken";
 import Users from "../models/users"
 
 
+
 // Đăng ký
 export const Registration = async(req, res) => {
         try {
@@ -101,11 +102,41 @@ export const refreshToken = (req, res) => {
     }
     // history
 export const history = async(req, res) => {
-    try {
-        const history = await Contract.find({ user_id: req.user.id })
+        try {
+            const history = await Contract.find({ user_id: req.user.id })
 
-        res.json(history)
-    } catch (err) {
-        return res.status(500).json({ status: err.message })
+            res.json(history)
+        } catch (err) {
+            return res.status(500).json({ status: err.message })
+        }
+    }
+    // Đổi mật khẩu
+export const usersChangePassword = async(req, res) => {
+    const { token, newpassword: plainTextPassword } = req.body
+
+    if (!plainTextPassword || typeof plainTextPassword !== 'string') {
+        return res.json({ status: 'error', error: 'Mật khẩu không hợp lệ!' })
+    }
+
+    if (plainTextPassword.length < 5) {
+        return res.json({
+            status: 'error',
+            error: 'Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!'
+        })
+    }
+    try {
+        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+
+        const _id = user.id
+
+        const password = await bcrypt.hash(plainTextPassword, 10)
+
+        await userCustomer.updateOne({ _id }, {
+            $set: { password }
+        })
+        res.json({ status: 'ok' })
+    } catch (error) {
+        console.log(error)
+        res.json({ status: 'error', error: ';))' })
     }
 }
