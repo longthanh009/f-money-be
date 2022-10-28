@@ -1,21 +1,6 @@
-
-const sendToken = (user,statusCode,res) =>{
-
-    const token = user.getJwtToken();
-
-    // Options for cookies
-   const options = {
-       expires: new Date(
-           Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-       ),
-       httpOnly: true
-   };
-
-   res.status(statusCode).cookie("token",token,options).json({
-       success: true,
-       user,
-       token
-   });
+export const createAccessToken = (user) => {
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '11m' })
 }
-
-module.exports = sendToken;
+export const createRefreshToken = (user) => {
+    return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
+}

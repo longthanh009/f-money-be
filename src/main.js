@@ -4,11 +4,8 @@ import morgan from "morgan";
 import connectDB from "./config/db.js";
 import cors from "cors";
 import dotenv from "dotenv";
-import adminAuth from "./routes/admin"
-import userLenderAuth from "./routes/userLender"
-import userCustomerAuth from "./routes/userCustomer"
-import routerBank from "./routes/bankAccount";
-import routerService from "./routes/bankAccount";
+import routerUsers from "./routes/users"
+
 
 // import routeAuth from "./routes/use.js"
 const app = express();
@@ -25,14 +22,10 @@ connectDB();
 
 app.get("/", (req, res) => {
     res.send("Backend is Running..");
-  });
+});
 
 // Router
-app.use("/api", routerBank);
-app.use("/api", routerService);
-app.use("/api", adminAuth);
-app.use("/api", userLenderAuth);
-app.use("/api", userCustomerAuth);
+app.use("/api", routerUsers);
 // app.use("/api/users", routeUsers);
 
 
