@@ -1,14 +1,32 @@
 import express from "express";
-import { history, Login, logout, refreshToken, Registration } from "../controllers/auth";
+import { history, Login, logout, refreshToken, Registration, usersChangePassword } from "../controllers/auth";
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: The users managing API
+ */
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Returns the list of all the users
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: The list of the users
+ */
 
 router.post("/users/register", Registration);
 router.post("/users/login", Login);
 router.get("/users/logout", logout);
 router.get('/users/refresh_token', refreshToken);
 router.get('/history', history);
-router.post("/users/change-password", );
+router.post("/users/change-password", usersChangePassword);
 router.put("/users/:id", );
 router.delete("/users/:id", );
 router.get("/users/:id", );
