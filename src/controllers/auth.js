@@ -164,10 +164,19 @@ export const getUsers = async(req, res, next) => {
     }
     // get/:id
 export const getUser = async(req, res) => {
+        try {
+            const user = await Users.findById(req.params.id);
+            const { password, ...others } = user._doc;
+            res.status(200).json(others);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    }
+    // DELETEUsers
+export const deleteUsers = async(req, res) => {
     try {
-        const user = await Users.findById(req.params.id);
-        const { password, ...others } = user._doc;
-        res.status(200).json(others);
+        await Users.findByIdAndDelete(req.params.id);
+        res.status(200).json("Người dùng đã bị xóa ...");
     } catch (err) {
         res.status(500).json(err);
     }
