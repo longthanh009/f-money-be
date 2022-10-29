@@ -4,8 +4,8 @@ import morgan from "morgan";
 import connectDB from "./config/db.js";
 import cors from "cors";
 import dotenv from "dotenv";
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
+// import swaggerJSDoc from "swagger-jsdoc";
+// import swaggerUi from "swagger-ui-express";
 import routerUsers from "./routes/users"
 
 
