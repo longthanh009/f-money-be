@@ -35,12 +35,18 @@ export const getUser = async(req, res, next) => {
     }
 }
 export const getUsers = async(req, res, next) => {
-    try {
-        const users = await User.find();
-        res.status(200).json(users);
-    } catch (err) {
-        next(err);
-    }
+    let { page, limit, sort, asc } = req.query;
+    if (!page) page = 1;
+    if (!limit) limit = 10;
+
+    const skip = (page - 1) * 10;
+    const users = await User.find()
+        .sort({
+            [sort]: asc
+        })
+        .skip(skip)
+        .limit(limit);
+    res.send({ page: page, limit: limit, users: users });
 }
 
 export const searchUsers = async(req, resp) => {
