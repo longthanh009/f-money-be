@@ -7,44 +7,43 @@ import Users from "../models/users"
 
 // Đăng ký
 export const Registration = async(req, res) => {
-        try {
-            const { name, username, password, SDT, CCCD, imgCCCD, Address } = req.body;
-
-            // first registered user is an admin
-            // const isFirstAccount = (await Users.countDocuments({})) === 0;
-            // const role = isFirstAccount ? 'admin' : ('userLender': 'userCustomer');
-            const user = await Users.findOne({ username })
-            if (user) return res.status(400).json({ status: "Tên tài khoảng không hợp lệ!" })
-
-            if (password.length < 6)
-                return res.status(400).json({ status: "Mật khẩu quá ngắn. Phải có ít nhất 6 ký tự!" })
-
-            // Password Encryption
-            const passwordHash = await bcrypt.hash(password, 10)
-            const newUser = new Users({
-                    name,
-                    username,
-                    password: passwordHash,
-                    SDT,
-                    CCCD,
-                    imgCCCD,
-                    Address,
-                })
-                // Save mongodb
-            await newUser.save()
-
-            // Then create jsonwebtoken to authentication
-            const accesstoken = createAccessToken({ id: newUser._id })
-            const refreshtoken = createRefreshToken({ id: newUser._id })
-            res.cookie('refreshtoken', refreshtoken, {
-                httpOnly: true,
-                path: '/user/refresh_token',
-                maxAge: 7 * 24 * 60 * 60 * 1000 // 7d
-            })
-            res.json({ accesstoken })
-        } catch (err) {
-            return res.status(500).json({ status: err.message })
+        const { name, username, password: plainTextPassword, SDT, CCCD, imgCCCD, Address } = req.body;
+        if (!username || typeof username !== 'string') {
+            return res.json({ status: 'error', error: 'Tên đăng nhập không hợp lệ!' })
         }
+
+        if (!plainTextPassword || typeof plainTextPassword !== 'string') {
+            return res.json({ status: 'error', error: 'Mật khẩu không hợp lệ!' })
+        };
+
+        if (plainTextPassword.length < 5) {
+            return res.json({
+                status: 'error',
+                error: 'Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!'
+            });
+        }
+
+        const password = await bcrypt.hash(plainTextPassword, 10);
+
+        try {
+            const response = await Users.create({
+                name,
+                username,
+                password,
+                SDT,
+                CCCD,
+                imgCCCD,
+                Address
+            })
+            console.log('Tài khoảng đăng ký thành công! : ', response)
+        } catch (error) {
+            if (error.code === 11000) {
+                // duplicate key
+                return res.json({ status: 'error', error: 'Tên tài khoản đã được sử dụng!' })
+            }
+            throw error
+        }
+        res.json({ status: 'ok' })
     }
     // Đăng nhập
 export const Login = async(req, res) => {
@@ -176,29 +175,38 @@ export const deleteUsers = async(req, res) => {
     // Get - phân trang
 const PAGE_SIZE = 5 //có 5 phần tử trong page
 export const getUsers = async(req, res, next) => {
-    var page = req.query.page;
+        var page = req.query.page;
 
-    if (page) {
-        //get page
-        page = parseInt(page)
-        if (page < 0) {
-            page = 1
-        }
-        var soLuongBoQua = (page - 1) * PAGE_SIZE;
+        if (page) {
+            //get page
+            page = parseInt(page)
+            if (page < 0) {
+                page = 1
+            }
+            var soLuongBoQua = (page - 1) * PAGE_SIZE;
 
 
-        await Users.find().skip(soLuongBoQua).limit(PAGE_SIZE)
-            .then(users => {
+            await Users.find().skip(soLuongBoQua).limit(PAGE_SIZE)
+                .then(users => {
+                    res.status(200).json(users);
+                }).catch(err => {
+                    res.status(500).json("Lỗi server!");
+                })
+        } else {
+            try {
+                const users = await Users.find();
                 res.status(200).json(users);
-            }).catch(err => {
-                res.status(500).json("Lỗi server!");
-            })
-    } else {
-        try {
-            const users = await Users.find();
-            res.status(200).json(users);
-        } catch (err) {
-            next(err);
+            } catch (err) {
+                next(err);
+            }
         }
     }
+    // Get - Search
+export const searchUsers = async(req, res, next) => {
+    let data = await Users.find({
+        "$or": [
+            { name: { $regex: req.params.key } }
+        ]
+    })
+    res.send(data);
 }
