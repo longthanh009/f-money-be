@@ -75,8 +75,38 @@ export const login = async(req, res, next) => {
 
 // Đăng xuất
 export const logout = async(req, res) => {
-    return res
-        .clearCookie("access_token")
-        .status(200)
-        .json({ message: "Successfully logged out 😏 🍀" });
+        return res
+            .clearCookie("access_token")
+            .status(200)
+            .json({ message: "Successfully logged out 😏 🍀" });
+    }
+    // Đổi mật khẩu
+export const usersChangePassword = async(req, res) => {
+    const { token, newpassword: plainTextPassword } = req.body
+
+    if (!plainTextPassword || typeof plainTextPassword !== 'string') {
+        return res.json({ status: 'error', error: 'Mật khẩu không hợp lệ!' })
+    }
+
+    if (plainTextPassword.length < 5) {
+        return res.json({
+            status: 'error',
+            error: 'Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!'
+        })
+    }
+    try {
+        const user = jwt.verify(token, JWT)
+
+        const _id = user.id
+
+        const password = await bcrypt.hash(plainTextPassword, 10)
+
+        await userCustomer.updateOne({ _id }, {
+            $set: { password }
+        })
+        res.json({ status: 'ok' })
+    } catch (error) {
+        console.log(error)
+        res.json({ status: 'error', error: ';))' })
+    }
 }
