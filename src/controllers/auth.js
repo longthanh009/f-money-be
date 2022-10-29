@@ -75,10 +75,8 @@ export const login = async(req, res, next) => {
 
 // Đăng xuất
 export const logout = async(req, res) => {
-    try {
-        res.clearCookie('refreshtoken', { path: '/user/refresh_token' })
-        return res.json({ status: "Đăng xuất thành công!" })
-    } catch (err) {
-        return res.status(500).json({ status: err.message })
-    }
+    return res
+        .clearCookie("access_token")
+        .status(200)
+        .json({ message: "Successfully logged out 😏 🍀" });
 }
