@@ -38,3 +38,11 @@ export const updateContract = async (req,res,next)=>{
       res.status(500).json("Lỗi delete Contract!")
     }
   }
+  export const getContract = async (req,res,next)=>{
+    try {
+      const contract = await Contract.findById(req.params.id);
+      res.status(200).json(contract);
+    } catch (err) {
+      res.status(500).json("không tìm thấy Contract")
+    }
+  }

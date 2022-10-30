@@ -1,10 +1,10 @@
 import express from "express";
-import {getContracts,createContracts,updateContract,deleteContract} from "../controllers/contract";
+import {getContracts,createContracts,updateContract,deleteContract,getContract} from "../controllers/contract";
 const router = express.Router();
 
 router.put("/contract/:id", updateContract);
 router.delete("/contract/:id", deleteContract);
-router.get("/contract/:id", );
+router.get("/contract/:id", getContract);
 router.get("/contracts", getContracts);
 router.post("/contracts", createContracts)
 
