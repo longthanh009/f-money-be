@@ -9,6 +9,7 @@ import userLenderAuth from "./routes/userLender"
 import userCustomerAuth from "./routes/userCustomer"
 import routerBank from "./routes/bankAccount";
 import routerService from "./routes/bankAccount";
+import routerContract from './routes/contract.js'
 
 // import routeAuth from "./routes/use.js"
 const app = express();
@@ -33,6 +34,7 @@ app.use("/api", routerService);
 app.use("/api", adminAuth);
 app.use("/api", userLenderAuth);
 app.use("/api", userCustomerAuth);
+app.use("/api" , routerContract)
 // app.use("/api/users", routeUsers);
 
 
