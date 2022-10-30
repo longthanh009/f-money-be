@@ -10,6 +10,11 @@ import userCustomerAuth from "./routes/userCustomer"
 import routerBank from "./routes/bankAccount";
 import routerService from "./routes/bankAccount";
 import routerContract from './routes/contract.js'
+// import swaggerJSDoc from "swagger-jsdoc";
+// import swaggerUi from "swagger-ui-express";
+import routerUsers from "./routes/users"
+
+
 
 // import routeAuth from "./routes/use.js"
 const app = express();
@@ -21,12 +26,13 @@ app.use(bodyParser.json())
 
 dotenv.config();
 
+
 const PORT = process.env.PORT || 9000;
 connectDB();
 
 app.get("/", (req, res) => {
     res.send("Backend is Running..");
-  });
+});
 
 // Router
 app.use("/api", routerBank);
@@ -35,6 +41,7 @@ app.use("/api", adminAuth);
 app.use("/api", userLenderAuth);
 app.use("/api", userCustomerAuth);
 app.use("/api" , routerContract)
+app.use("/api", routerUsers);
 // app.use("/api/users", routeUsers);
 
 
