@@ -8,15 +8,19 @@ const JWT = '8hEnPGeoBqGUT6zksxt4G95gW+uMdzwe7EVaRnp0xRI=';
 
 // Đăng ký
 export const Registration = async(req, res) => {
-        const { name, username, password: plainTextPassword, SDT, CCCD, imgCCCD, Address } = req.body;
-        if (!username || typeof username !== 'string') {
-            return res.json({ status: 'error', error: 'Tên đăng nhập không hợp lệ!' })
+        const { name, username, password: plainTextPassword, phone, CCCD, imgCCCD, address, email } = req.body;
+        const exitsUser = await Users.findOne({ username }).exec();
+        const exitsEmail = await Users.findOne({ email }).exec();
+        if (exitsUser) {
+            return res.status(400).json({
+                message: "Tên đăng nhập đã tồn tại"
+            })
         }
-
-        if (!plainTextPassword || typeof plainTextPassword !== 'string') {
-            return res.json({ status: 'error', error: 'Mật khẩu không hợp lệ!' })
-        };
-
+        if (exitsEmail) {
+            return res.status(400).json({
+                message: "Email đã tồn tại"
+            })
+        }
         if (plainTextPassword.length < 5) {
             return res.json({
                 status: 'error',
@@ -27,15 +31,7 @@ export const Registration = async(req, res) => {
         const password = await bcrypt.hash(plainTextPassword, 10);
 
         try {
-            const response = await Users.create({
-                name,
-                username,
-                password,
-                SDT,
-                CCCD,
-                imgCCCD,
-                Address
-            })
+            const response = await Users.create(res.body);
             console.log('Tài khoảng đăng ký thành công! : ', response)
         } catch (error) {
             if (error.code === 11000) {
