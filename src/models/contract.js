@@ -1,45 +1,47 @@
 import mongoose from "mongoose";
-
+import users from "./users"
 const Contract = new mongoose.Schema(
     {
-        typeContract: {
+        TypeContract: {
             type : String,
         },
-        userLeader:{
-            type: String,
+        userLeaderId:{
+            type: Object,
+            ref: users
         },
-        userCustomer:{
-            type: String ,
+        userCustomerId:{
+            type: Object,
+            ref: users
         },
-        total_loan_Amount:{
+        totalLoanAmount:{
             type: Number,
         },
-        customers_give_money:{
+        customersGiveMoney:{
             type: Number,
         },
-        days_Payable:{
+        daysPayable:{
             type: String,
         },
-        borrowing_Date:{
+        borrowingDate:{
             type: String,
         },
         ratio:{
             type: String,
         },
-        one_day_payment:{
+        onePayPayment:{
             type: Number,
         },
-        amount_paid:{
+        amountPaid:{
             type: Number,
         },
-        remaining_amount:{
+        remainingAmount:{
             type: Number,
         },
-        StatusCustomer:{
+        statusCustomer:{
             type: Number,
             default: false,
         },
-        StatusContract:{
+        statusContract:{
             type: Number,
             default: false,
         }

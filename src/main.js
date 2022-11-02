@@ -29,8 +29,7 @@ app.get("/", (req, res) => {
     res.send("Backend is Running..");
 });
 
-// Router
-app.use("/api", routerContract)
+app.use("/api" , routerContract)
 app.use("/api", routerUsers);
 // app.use("/api/users", routeUsers);
 
