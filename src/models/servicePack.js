@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const ServicePackSchema = new mongoose.Schema(
   {
+    // so thang
     numberMonth: {
         type: Number,
     },
