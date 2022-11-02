@@ -18,26 +18,25 @@ const Users = new mongoose.Schema({
         required: [true, 'Please provide password'],
         minlength: 6,
     },
-    SDT: { type: Number, required: true },
-    Email: { type: String },
+    phone: { type: Number, required: true },
+    email: { type: String },
     CCCD: { type: String },
-    imgCCCD: { type: String },
-    Address: { type: String },
-    Avatar: { type: String },
+    imgCCCD: { type: Array },
+    address: { type: String },
+    avatar: { type: String },
     dateOfBirth: { type: Date },
-    Expiration: { type: Date },
-    Activate: { type: String },
+    expiration: { type: Date },
     role: {
         type: String,
         enum: ['admin', 'userLender', 'userCustomer'],
         default: 'userCustomer',
     },
-    Activate: {
+    activate: {
         type: Boolean,
         default: false
     },
-    TotalAmount: { type: String, default: "300000000" },
-    Contract: {
+    totalAmount: { type: String, default: "300000000" },
+    contract: {
         type: Array,
         default: []
     }
