@@ -1,8 +1,8 @@
 import express from "express";
-import {getContractDetails,createContractDetails} from "../controllers/contractDetail"
+import {getContractDetails,createContractDetails,updateContractDetail} from "../controllers/contractDetail"
 const router = express.Router();
 
-router.put("/contractDetail/:id", );
+router.put("/contractDetail/:id", updateContractDetail);
 router.delete("/contractDetail/:id", );
 router.get("/contractDetail/:id", );
 router.get("/contractDetails",getContractDetails);

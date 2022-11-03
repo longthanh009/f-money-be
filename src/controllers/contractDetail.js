@@ -16,3 +16,15 @@ export const createContractDetails = async(req,res) => {
       res.status(500).json("Thêm Thành công contractDetail")
   }
 }
+export const updateContractDetail = async (req,res,next)=>{
+  try {
+    const updatedContract = await contractDetail.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+    res.status(200).json(updatedContract);
+  } catch (err) {
+    res.status(500).json("Lỗi update contractDetail!")
+  }
+}
