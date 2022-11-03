@@ -11,6 +11,7 @@ import routerContractDetail from "./routes/contractDetail";
 import routerUsers from "./routes/users"
 import routerBank from "./routes/bankAccount";
 import routerService from "./routes/bankAccount";
+import path from "path";
 
 
 
@@ -27,21 +28,32 @@ dotenv.config();
 
 //swagger
 app.use(express.json());
-const swaggerOptions = {
+const options = {
     swaggerDefinition: {
+        openapi: "3.0.1",
         info: {
+            title: "My apis in swaager F-money",
             version: "1.0.0",
-            title: "Customer API",
-            description: "Customer API Information",
-            contact: {
-                name: "Amazing Developer"
+        },
+        servers: [{
+            url: "http://localhost:9000",
+        }, ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                },
             },
-            servers: ["http://localhost:5000"]
-        }
+        },
+        security: [{
+            bearerAuth: [],
+        }, ],
     },
-    apis: ['.routes/*.js']
+    apis: [`${path.join(__dirname,"./routes/*.js")}`],
 };
-const swaggerSpecs = swaggerJSDoc(swaggerOptions);
+const swaggerSpecs = swaggerJSDoc(options);
 
 
 const PORT = process.env.PORT || 9000;
