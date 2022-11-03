@@ -39,11 +39,11 @@ const Contract = new mongoose.Schema(
         },
         statusCustomer:{
             type: Number,
-            default: false,
+            default: true,
         },
         statusContract:{
             type: Number,
-            default: false,
+            default: true,
         }
     },
     { timestamps: true }
