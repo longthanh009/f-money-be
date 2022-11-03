@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const Users = new mongoose.Schema({
-    
+
     name: {
         type: String,
         minlength: 3,
@@ -25,8 +25,8 @@ const Users = new mongoose.Schema({
     imgCCCD: { type: Array },
     address: { type: String },
     avatar: { type: String },
-    dateOfBirth: { type: Date },
-    expiration: { type: Date },
+    dateOfBirth: { type: Date },//ngày tạo tài khoản
+    expiration: { type: Date },// ngày hết hạn
     role: {
         type: String,
         enum: ['admin', 'userLender', 'userCustomer'],
@@ -36,7 +36,7 @@ const Users = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    totalAmount: { type: String, default: "300000000" },
+    totalAmount: { type: String, default: "300000000" },//tổng tiền 
     contract: {
         type: Array,
         default: []
