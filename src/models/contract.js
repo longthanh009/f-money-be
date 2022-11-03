@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import users from "./users"
+import  contractDetail  from "./contractDetail"
 const Contract = new mongoose.Schema(
     {
         TypeContract: {
@@ -37,13 +38,17 @@ const Contract = new mongoose.Schema(
         remainingAmount:{
             type: Number,
         },
+        contractDetailsId:{
+           type: Object,
+           ref:contractDetail
+        },
         statusCustomer:{
             type: Number,
-            default: false,
+            default: true,
         },
         statusContract:{
             type: Number,
-            default: false,
+            default: true,
         }
     },
     { timestamps: true }
