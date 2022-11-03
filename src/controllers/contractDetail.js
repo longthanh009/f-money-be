@@ -36,3 +36,11 @@ export const deleteContractDetail = async (req,res,next)=>{
     res.status(500).json("Lỗi delete contractDetail!")
   }
 }
+export const getContractDetail = async (req,res,next)=>{
+  try {
+    const contractDetail = await contractDetail.findById(req.params.id);
+    res.status(200).json(contractDetail);
+  } catch (err) {
+    res.status(500).json("không tìm thấy contractDetail")
+  }
+}
