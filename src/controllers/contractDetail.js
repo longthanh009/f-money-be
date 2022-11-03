@@ -28,3 +28,11 @@ export const updateContractDetail = async (req,res,next)=>{
     res.status(500).json("Lỗi update contractDetail!")
   }
 }
+export const deleteContractDetail = async (req,res,next)=>{
+  try {
+    await Contract.findByIdAndDelete(req.params.id);
+    res.status(200).json("contractDetail has been deleted.");
+  } catch (err) {
+    res.status(500).json("Lỗi delete contractDetail!")
+  }
+}
