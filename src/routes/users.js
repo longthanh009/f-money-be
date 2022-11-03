@@ -7,29 +7,149 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   name: Users
- *   description: The users managing API
+ *  name: Users
+ *  description: This is for the main data
+ * /api/users:
+ *  get:
+ *      tags: [Users]
+ *      parameters:
+ *     
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
  */
+router.get("/users", getUsers);
 
 /**
  * @swagger
- * /api/users:
- *   get:
- *     summary: Returns the list of all the users
- *     tags: [Users]
- *     responses:
- *       200:
- *         description: The list of the users
+ * tags:
+ *  name: Users
+ *  description: This is for the main data
+ * /api/users/:id:
+ *  get:
+ *      tags: [Users]
+ *      parameters:
+ *     
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
  */
-
-router.post("/users/register", Registration);
-router.post("/users/login", login);
-router.get("/users/logout", logout);
-router.post("/users/change-password", usersChangePassword);
-router.put("/users/:id", updateUser);
-router.delete("/users/:id", deleteUser);
 router.get("/users/:id", getUser);
-router.get("/users", getUsers);
+
+/**
+ * @swagger
+ * tags:
+ *  name: Users
+ *  description: This is for the main data
+ * /api/users/:id:
+ *  put:
+ *      tags: [Users]
+ *      parameters:
+ *     
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+router.put("/users/:id", updateUser);
+
+
+/**
+ * @swagger
+ * tags:
+ *  name: Users
+ *  description: This is for the main data
+ * /api/users/:id:
+ *  delete:
+ *      tags: [Users]
+ *      parameters:
+ *     
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+router.delete("/users/:id", deleteUser);
+
+/**
+ * @swagger
+ * tags:
+ *  name: Users
+ *  description: This is for the main data
+ * /users/register:
+ *  post:
+ *      tags: [Users]
+ *      parameters:
+ *     
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+router.post("/users/register", Registration);
+
+
+/**
+ * @swagger
+ * tags:
+ *  name: Users
+ *  description: This is for the main data
+ * /users/login:
+ *  post:
+ *      tags: [Users]
+ *      parameters:
+ *     
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+router.post("/users/login", login);
+
+/**
+ * @swagger
+ * tags:
+ *  name: Users
+ *  description: This is for the main data
+ * /users/logout:
+ *  get:
+ *      tags: [Users]
+ *      parameters:
+ *     
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+router.get("/users/logout", logout);
+
+
+/**
+ * @swagger
+ * tags:
+ *  name: Users
+ *  description: This is for the main data
+ * /users/change-password:
+ *  post:
+ *      tags: [Users]
+ *      parameters:
+ *     
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+router.post("/users/change-password", usersChangePassword);
+
+
+/**
+ * @swagger
+ * tags:
+ *  name: Users
+ *  description: This is for the main data
+ * /users/search/:key:
+ *  post:
+ *      tags: [Users]
+ *      parameters:
+ *     
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
 router.get("/users/search/:key", searchUsers);
 
 

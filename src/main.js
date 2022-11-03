@@ -5,9 +5,14 @@ import connectDB from "./config/db.js";
 import cors from "cors";
 import dotenv from "dotenv";
 import routerContract from './routes/contract.js'
-// import swaggerJSDoc from "swagger-jsdoc";
-// import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import routerContractDetail from "./routes/contractDetail";
 import routerUsers from "./routes/users"
+import routerBank from "./routes/bankAccount";
+import routerService from "./routes/bankAccount";
+import path from "path";
+
 
 
 
@@ -21,6 +26,35 @@ app.use(bodyParser.json())
 
 dotenv.config();
 
+//swagger
+app.use(express.json());
+const options = {
+    swaggerDefinition: {
+        openapi: "3.0.1",
+        info: {
+            title: "My apis in swaager F-money",
+            version: "1.0.0",
+        },
+        servers: [{
+            url: "http://localhost:9000",
+        }, ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                },
+            },
+        },
+        security: [{
+            bearerAuth: [],
+        }, ],
+    },
+    apis: [`${path.join(__dirname,"./routes/*.js")}`],
+};
+const swaggerSpecs = swaggerJSDoc(options);
+
 
 const PORT = process.env.PORT || 9000;
 connectDB();
@@ -29,9 +63,11 @@ app.get("/", (req, res) => {
     res.send("Backend is Running..");
 });
 
-// Router
-app.use("/api", routerContract)
+app.use("/api", routerContract, routerContractDetail)
 app.use("/api", routerUsers);
+app.use("/api", routerBank);
+app.use("/api", routerService);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 // app.use("/api/users", routeUsers);
 
 

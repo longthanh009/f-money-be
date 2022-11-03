@@ -1,86 +1,87 @@
 import express from "express";
-import { getContracts, createContracts, updateContract, deleteContract, getContract } from "../controllers/contract";
+import { getContractDetails, createContractDetails, updateContractDetail, deleteContractDetail, getContractDetail } from "../controllers/contractDetail"
 const router = express.Router();
 
 
+
 /**
  * @swagger
  * tags:
- *  name: contracts
+ *  name: contractDetail
  *  description: This is for the main data
- * /api/contract/:id:
+ * /api/contractDetail/:id:
  *  put:
- *      tags: [contracts]
+ *      tags: [contractDetail]
  *      parameters:
  *     
  *      responses:
  *          default:
  *              description: This is the default response for it
  */
-router.put("/contract/:id", updateContract);
+router.put("/contractDetail/:id", updateContractDetail);
 
 /**
  * @swagger
  * tags:
- *  name: contracts
+ *  name: contractDetail
  *  description: This is for the main data
- * /api/contract/:id:
+ * /api/contractDetail/:id:
  *  delete:
- *      tags: [contracts]
+ *      tags: [contractDetail]
  *      parameters:
  *     
  *      responses:
  *          default:
  *              description: This is the default response for it
  */
-router.delete("/contract/:id", deleteContract);
+router.delete("/contractDetail/:id", deleteContractDetail);
 
 /**
  * @swagger
  * tags:
- *  name: contracts
+ *  name: contractDetail
  *  description: This is for the main data
- * /api/contract/:id:
+ * /api/contractDetail/:id:
  *  get:
- *      tags: [contracts]
+ *      tags: [contractDetail]
  *      parameters:
  *     
  *      responses:
  *          default:
  *              description: This is the default response for it
  */
-router.get("/contract/:id", getContract);
+router.get("/contractDetail/:id", getContractDetail);
 
 /**
  * @swagger
  * tags:
- *  name: contracts
+ *  name: contractDetail
  *  description: This is for the main data
- * /api/contracts:
+ * /api/contractDetail:
  *  get:
- *      tags: [contracts]
+ *      tags: [contractDetail]
  *      parameters:
  *     
  *      responses:
  *          default:
  *              description: This is the default response for it
  */
-router.get("/contracts", getContracts);
+router.get("/contractDetails", getContractDetails);
 
 /**
  * @swagger
  * tags:
- *  name: contracts
+ *  name: contractDetail
  *  description: This is for the main data
- * /api/contracts:
+ * /api/contractDetail:
  *  post:
- *      tags: [contracts]
+ *      tags: [contractDetail]
  *      parameters:
  *     
  *      responses:
  *          default:
  *              description: This is the default response for it
  */
-router.post("/contracts", createContracts)
+router.post("/contractDetails", createContractDetails)
 
 export default router;

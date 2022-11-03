@@ -48,29 +48,27 @@ export const Registration = async(req, res) => {
     }
     // Đăng nhập
 export const login = async(req, res, next) => {
-    try {
-        const user = await Users.findOne({ username: req.body.username });
-        if (!user) return next(createError(404, "User not found!"));
+    const { username, password } = req.body;
+    const user = await Users.findOne({ username }).lean()
 
-        const isPasswordCorrect = await bcrypt.compare(
-            req.body.password,
-            user.password
-        );
-        if (!isPasswordCorrect)
-            return next(createError(400, "Wrong password or username!"));
-
-        const token = jwt.sign({ id: user._id, role: user.role }, JWT);
-
-        const { password, role, ...otherDetails } = user._doc;
-        res
-            .cookie("access_token", token, {
-                httpOnly: true,
-            })
-            .status(200)
-            .json({ details: {...otherDetails }, role });
-    } catch (err) {
-        next(err);
+    if (!user) {
+        return res.json({ status: 'error', error: 'Tên người dùng hoặc mật khẩu không hợp lệ!' })
     }
+
+    if (await bcrypt.compare(password, user.password)) {
+        // the username, password combination is successful
+
+        const token = jwt.sign({
+                id: user._id,
+                username: user.username
+            },
+            JWT
+        )
+
+        return res.json({ status: 'ok', data: token })
+    }
+
+    res.json({ status: 'error', error: 'Tên người dùng hoặc mật khẩu không hợp lệ!' })
 };
 
 // Đăng xuất
