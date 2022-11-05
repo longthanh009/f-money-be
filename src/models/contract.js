@@ -80,7 +80,8 @@ const Contract = new mongoose.Schema(
     },
     // trạng thái hợp đồng
     statusContract: {
-      type: Object,
+      type: Number,
+      default: false,
     },
     //tiền đóng 1 ngày
     oneDayPayment: {
