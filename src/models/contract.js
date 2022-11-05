@@ -1,72 +1,47 @@
 import mongoose from "mongoose";
-import users from "./users"
-import  contractDetail  from "./contractDetail"
+
 const Contract = new mongoose.Schema(
     {
-        //loại hợp đồng
-        TypeContract: {
+        typeContract: {
             type : String,
         },
-        // name người vay
-        customerName: {
-            type : String,
-            require: true,
-        },
-        userLeaderId:{
-            type: Object,
-            ref: users
-        },
-        userCustomerId:{
-            type: Object,
-            ref: users
-        },
-        //tổng tiền vay(bát họ)
-        totalLoanAmount:{
-            type: Number,
-        },
-        // Tiền đưa khách
-        customersGiveMoney:{
-            type: Number,
-        },
-        // số ngày đóng
-        daysPayable:{
+        userLeader:{
             type: String,
         },
-        // ngày vay(ngày bắt đầu và ngày kết thúc)
-        borrowingDate:{
+        userCustomer:{
+            type: String ,
+        },
+        total_loan_Amount:{
+            type: Number,
+        },
+        customers_give_money:{
+            type: Number,
+        },
+        days_Payable:{
             type: String,
         },
-        // tỉ lệ    
+        borrowing_Date:{
+            type: String,
+        },
         ratio:{
             type: String,
         },
-        // Tiền đóng 1 ngày
-        onePayPayment:{
+        one_day_payment:{
             type: Number,
         },
-        // số tiền đã đóng
-        amountPaid:{
+        amount_paid:{
             type: Number,
         },
-        //ngày con lại phải đóng
-        remainingAmount:{
+        remaining_amount:{
             type: Number,
         },
-        // ngày phải đóng   
-        closingDate:{
-            type: String,
-        },
-        contractDetailsId:{
-           type: Object,
-           ref:contractDetail
-        },
-        statusCustomer:{
+        StatusCustomer:{
             type: Number,
-            default: true,
+            default: false,
         },
-        statusContract:{
+        StatusContract:{
             type: Number,
-            default: true,
+            default: false,
         }
     },
     { timestamps: true }
