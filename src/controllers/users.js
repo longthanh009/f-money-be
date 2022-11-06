@@ -21,14 +21,16 @@ export const deleteUser = async(req, res, next) => {
 }
 export const getUser = async(req, res, next) => {
     try {
-        const user = await User.findById(id).exec();
+        const user = await User.findById({ _id: req.params.id }).exec();
         if (!user) {
-            res.status(400).json({
-                message: "Không tìm thấy user"
+            res.status(200).json({
+                error: "Không tìm thấy user"
             })
         }
-        req.profile = user;
-        req.profile.password = undefined;
+        res.json(user);
+        // không hiển thị mật khẩu!
+        // req.profile = user;
+        // req.profile.password = undefined;
         next();
     } catch (error) {
         console.log(error);
