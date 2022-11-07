@@ -10,9 +10,7 @@ import swaggerUi from "swagger-ui-express";
 import routerContractDetail from "./routes/contractDetail";
 import routerUsers from "./routes/users"
 import routerBank from "./routes/bankAccount";
-import routerService from "./routes/bankAccount";
-import path from "path";
-
+import routerService from "./routes/servicePack";
 
 
 

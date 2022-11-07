@@ -11,7 +11,7 @@ const BankAccountSchema = new mongoose.Schema(
     accountHolder: {
         type: String,
     },
-    Note: {
+    note: {
         type: String,
     }
   },
