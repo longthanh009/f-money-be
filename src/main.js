@@ -9,7 +9,7 @@ import routerContract from './routes/contract.js'
 // import swaggerUi from "swagger-ui-express";
 import routerUsers from "./routes/users"
 import routerBank from "./routes/bankAccount";
-import routerService from "./routes/bankAccount";
+import routerService from "./routes/servicePack";
 
 
 
