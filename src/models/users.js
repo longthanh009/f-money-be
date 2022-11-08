@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
+import role from "./role";
 
+const {ObjectId } = mongoose.Types;
 const Users = new mongoose.Schema({
 
     name: {
@@ -25,12 +27,12 @@ const Users = new mongoose.Schema({
     imgCCCD: { type: Array },
     address: { type: String },
     avatar: { type: String },
+    birthDay: { type: Date },
     dateOfBirth: { type: Date },//ngày tạo tài khoản
     expiration: { type: Date },// ngày hết hạn
     role: {
-        type: String,
-        enum: ['admin', 'userLender', 'userCustomer'],
-        default: 'userCustomer',
+        type : ObjectId,
+        ref : role
     },
     activate: {
         type: Boolean,
