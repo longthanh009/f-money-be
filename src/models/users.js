@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
+import role from "./role";
 
+const {ObjectId } = mongoose.Types;
 const Users = new mongoose.Schema({
 
     name: {
@@ -29,7 +31,8 @@ const Users = new mongoose.Schema({
     dateOfBirth: { type: Date },//ngày tạo tài khoản
     expiration: { type: Date },// ngày hết hạn
     role: {
-        type: String,
+        type : ObjectId,
+        ref : role
     },
     activate: {
         type: Boolean,
