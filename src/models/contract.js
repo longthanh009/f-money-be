@@ -1,127 +1,83 @@
 import mongoose from "mongoose";
 import users from "./users";
-import contractDetail from "./contractDetail"
 const Contract = new mongoose.Schema(
   {
-    // loại họp đồng
-    typeContract: {
-      type: Number,
+    ma_hd: {
+      type: String,
       default: false,
       require: true,
     },
     // tên khách hàng
-    customerName: {
-      type: String,
-      require: true,
-    },
-    // mã khách hàng
-    contractCode: {
+    ten_khach_hang: {
       type: String,
       require: true,
     },
     // thẻ căn cước công dân
-    cmnd: {
+    cccd: {
       type: Number,
       require: true,
     },
     // số điện thoại
-    phoneNumber: {
+    dien_thoai: {
       type: Number,
       require: true,
     },
     // địa chỉ
-    address: {
+    dia_chi: {
       type: String,
       require: true,
     },
-    // Tiền khách hàng nhận được
-    moneyReceivedByCustomer: {
+    // Tiền khách hàng vay
+    khoan_vay: {
       type: Number,
       require: true,
     },
-    // tiền phải trả
-    moneyToBePaid: {
+    // % lai
+    lai_xuat: {
+      type: Number,
+      require: true,
+    },
+    tong_hd: {
       type: Number,
       require: true,
     },
     //Bốc trong vòng
-    borrowMoneyForHowManyDays: {
+    han_vay: {
       type: Number,
       require: true,
     },
     // số ngày thanh toán 1 lần
-    numberOfDaysOf1Payment: {
+    han_tra: {
       type: Number,
-      require: true,
-    },
-    // ngày vay tiền
-    loanDate: {
-      type: String,
       require: true,
     },
     // ghi chú
-    desc: {
+    ghi_chu: {
       type: String,
     },
     //ID Ng cho vay    ----->
-    userLeaderId: {
+    nguoi_tao_hd: {
       type: Object,
       ref: users,
-    },
-    //ID khách hàng
-    userCustomerId: {
-      type: Object,
-      ref: users,
-    },
-    // trạng thái của người vay
-    statusCustomer: {
-      type: Number,
-      default: false,
-    },
-    // trạng thái hợp đồng
-    statusContract: {
-      type: Number,
-      default: false,
-    },
-    //tiền đóng 1 ngày
-    oneDayPayment: {
-      type: Number,
     },
     // ngày phải đóng tiền (hôm nay, ngày mai , 20/12/20021)
-    paymentDate: {
-      type: String,
+    han_thanh_toan: {
+      type: Array,
     },
     // Tổng số tiền khách đã đóng
-    amountPaidCustomer: {
+    da_thanh_toan: {
       type: Number,
-    },
-    // số tiền còn lại phải trả
-    remainingAmountPaid: {
-      type: Number,
-    },
-    // nợ cũ
-    oldDebt: {
-      type: Number,
+      default :0
     },
     // ngày kết thúc vay tiền
-    loanClosingDate: {
-      type: String,
-    },
-    // Tổng lãi phí
-    totalInterest: {
+    han_hd: {
       type: Number,
     },
-    ///------>                                    chi tiết hợp đồng
-    // ngày họ (từng ngày theo từng kỳ)
-    // tiền họ (tiền đóng theo từng ngày)
-    // ngày giao dịch các khoản đóng tiền (ngày nào đã đóng)
-    // tiền khách trả ( theo từng ngày)
-    contractDetailsId:{
-      type: Object,
-      ref:contractDetail
-   },
-  },
-  { timestamps: true }
-);
+    // trạng thái hợp đồng
+    status: {
+      type: Number,
+      default: 0,
+    },
+  }, { timestamps: true });
 
 module.exports = mongoose.model("Contract", Contract);
