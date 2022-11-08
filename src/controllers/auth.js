@@ -8,17 +8,29 @@ const JWT = '8hEnPGeoBqGUT6zksxt4G95gW+uMdzwe7EVaRnp0xRI=';
 
 // Đăng ký
 export const Registration = async(req, res) => {
-        const { username, password: plainTextPassword, phone } = req.body;
+        const {name, username, password: plainTextPassword, phone, CCCD, email,birthDay } = req.body;
         const exitsUser = await Users.findOne({ username }).exec();
         const exitsPhone = await Users.findOne({ phone }).exec();
+        const exitsCCCD = await Users.findOne({ CCCD }).exec();
+        const exitsEmail = await Users.findOne({ email }).exec();
+        if (exitsEmail) {
+            return res.status(200).json({
+                error: "Email đã tồn tại"
+            })
+        }
         if (exitsUser) {
-            return res.status(400).json({
-                message: "Tên đăng nhập đã tồn tại"
+            return res.status(200).json({
+                error: "Tên đăng nhập đã tồn tại"
             })
         }
         if (exitsPhone) {
-            return res.status(400).json({
-                message: "Số điện thoại đã tồn tại"
+            return res.status(200).json({
+                error: "Số điện thoại đã tồn tại"
+            })
+        }
+        if (exitsCCCD) {
+            return res.status(200).json({
+                error: "Số CCCD đã tồn tại"
             })
         }
         if (plainTextPassword.length < 5) {
@@ -32,10 +44,15 @@ export const Registration = async(req, res) => {
 
         try {
             const response = await Users.create({
-                username,
-                password,
-                phone
+                name, 
+                username, 
+                password, 
+                phone, 
+                CCCD, 
+                email,
+                birthDay
             });
+            res.status(200).json(response);
             console.log('Tài khoảng đăng ký thành công! : ', response)
         } catch (error) {
             if (error.code === 11000) {
@@ -76,7 +93,7 @@ export const logout = async(req, res) => {
         return res
             .clearCookie("access_token")
             .status(200)
-            .json({ message: "Successfully logged out 😏 🍀" });
+            .json({ error: "Successfully logged out 😏 🍀" });
     }
     // Đổi mật khẩu
 export const usersChangePassword = async(req, res) => {

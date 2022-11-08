@@ -25,12 +25,11 @@ const Users = new mongoose.Schema({
     imgCCCD: { type: Array },
     address: { type: String },
     avatar: { type: String },
+    birthDay: { type: Date },
     dateOfBirth: { type: Date },//ngày tạo tài khoản
     expiration: { type: Date },// ngày hết hạn
     role: {
         type: String,
-        enum: ['admin', 'userLender', 'userCustomer'],
-        default: 'userCustomer',
     },
     activate: {
         type: Boolean,
