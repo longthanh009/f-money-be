@@ -14,7 +14,7 @@ export const createLoan = async (req, res) => {
 }
 export const getMenuLoan = async (req, res) => {
     try {
-        const data = await menuLoan.find().exec();
+        const data = await menuLoan.find({trang_thai : 0}).exec();
         res.status(200).json(data);
     } catch (error) {
         res.status(500).json({"error" : error})

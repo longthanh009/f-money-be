@@ -24,6 +24,11 @@ const MenuLoanSchema = new mongoose.Schema(
         nguoi_yeu_cau: {
             type:  mongoose.Types.ObjectId,
             require :true
+        },
+        trang_thai : {
+            type: Number,
+            require :true,
+            default : 0
         }
     },
     { timestamps: true }
