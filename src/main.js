@@ -10,11 +10,14 @@ import swaggerUi from "swagger-ui-express";
 import routerContractDetail from "./routes/contractDetail";
 import routerUsers from "./routes/users"
 import routerBank from "./routes/bankAccount";
+<<<<<<< HEAD
 import routerService from "./routes/bankAccount";
 import routerMenuLoan from "./routes/menuLoan";
 import routerRole from "./routes/role";
 import path from "path";
 
+=======
+>>>>>>> 0cc3a6b (fix review)
 import routerService from "./routes/servicePack";
 
 
