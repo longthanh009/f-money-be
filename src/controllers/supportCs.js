@@ -72,5 +72,7 @@ export const getSupportCs = async (req, res) => {
                 return res.status(403).json({ "error": "Bạn không có quyền truy cập" });
             }
         }
+    } else {
+        return res.status(400).json({ "error": "Dữ liệu không đúng" });
     }
 }
