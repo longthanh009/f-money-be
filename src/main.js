@@ -12,6 +12,7 @@ import routerUsers from "./routes/users"
 import routerBank from "./routes/bankAccount";
 import routerMenuLoan from "./routes/menuLoan";
 import routerRole from "./routes/role";
+import routerSupport from "./routes/supportCs";
 import path from "path";
 import routerService from "./routes/servicePack";
 
@@ -70,6 +71,7 @@ app.use("/api", routerRole);
 app.use("/api", routerBank);
 app.use("/api", routerService);
 app.use("/api", routerMenuLoan);
+app.use("/api", routerSupport);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 // app.use("/api/users", routeUsers);
 
