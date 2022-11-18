@@ -1,11 +1,38 @@
 import Contract from "../models/contract";
 import User from "../models/users";
-import mongoose  from "mongoose";
+import mongoose from "mongoose";
 export const getContracts = async (req, res) => {
   const user_id = req.query.id;
+  const formDate = req.query.formdate;
+  const toDate = req.query.todate;
   if (user_id) {
+    let objfind = {};
+    if (formDate) {
+      let end
+      objfind = { $gte: new Date(parseInt(formDate)) } 
+      if (toDate) {
+        end = parseInt(toDate) + (24*60*60*1000)
+        objfind = { $gte: new Date(parseInt(formDate)), $lt: new Date(parseInt(end)) }
+      }
+      try {
+        const userExits = await User.findOne({ "_id": user_id}).exec()
+        if (!userExits) {
+          return res.status(400).json({ "message": "Dữ liệu không đúng" });
+        } else {
+          if (userExits.role == 2) {
+            const data = await Contract.find({}).exec()
+            return res.status(200).json(data);
+          } else {
+            const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt" : objfind }).exec()
+            return res.status(200).json(data);
+          }
+        }
+      } catch (error) {
+        res.status(500).json({ "error": "Dữ liệu không đúng hoặc không tồn tại !!" })
+      }
+    }
     try {
-      const userExits = await User.findOne({ "_id": mongoose.Types.ObjectId(user_id) }).exec()
+      const userExits = await User.findOne({ "_id": user_id }).exec();
       if (!userExits) {
         return res.status(400).json({ "message": "Dữ liệu không đúng" });
       } else {
@@ -13,7 +40,7 @@ export const getContracts = async (req, res) => {
           const data = await Contract.find({}).exec()
           return res.status(200).json(data);
         } else {
-          const data = await Contract.find({ "nguoi_tao_hd": mongoose.Types.ObjectId(user_id) }).exec()
+          const data = await Contract.find({ "nguoi_tao_hd": user_id }).exec()
           return res.status(200).json(data);
         }
       }
