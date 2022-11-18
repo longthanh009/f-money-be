@@ -1,9 +1,6 @@
 import mongoose from "mongoose";
-import role from "./role";
-
-const {ObjectId } = mongoose.Types;
 const Users = new mongoose.Schema({
-
+    code:{type: String},
     name: {
         type: String,
         minlength: 3,
@@ -21,27 +18,21 @@ const Users = new mongoose.Schema({
         required: [true, 'Please provide password'],
         minlength: 6,
     },
-    phone: { type: Number, required: true },
+    phone: { type: Number },
     email: { type: String },
-    CCCD: { type: String },
-    imgCCCD: { type: Array },
-    address: { type: String },
-    avatar: { type: String },
-    birthDay: { type: Date },
-    dateOfBirth: { type: Date },//ngày tạo tài khoản
-    expiration: { type: Date },// ngày hết hạn
-    role: {
-        type : ObjectId,
-        ref : role
-    },
     activate: {
+        Date: Number,
+        type: Boolean,
+        default: false,
+        end_date : Number,
+    },
+    status:{
         type: Boolean,
         default: false
     },
-    totalAmount: { type: String, default: "300000000" },//tổng tiền 
-    contract: {
-        type: Array,
-        default: []
+    role:{
+        type: Number,
+        default: 0,
     }
 }, { timestamps: true });
 
