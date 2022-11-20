@@ -11,6 +11,21 @@ export const listBank = async(req,res) => {
         })
     }
 }
+// get one
+export const getBank = async(req, res, next) => {
+    try {
+        const bank = await bankAccount.findById({ _id: req.params.id }).exec();
+        if (!bank) {
+            res.status(200).json({
+                error: "Không tìm thấy ngân hàng"
+            })
+        }
+        res.json(bank);
+        next();
+    } catch (error) {
+        console.log(error);
+    }
+}
 // creat
 export const createBank = async(req,res) => {
     try {

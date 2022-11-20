@@ -1,8 +1,8 @@
 import express from "express";
-import { deleteBank, createBank, listBank, updateBank } from "../controllers/bankAccount";
+import { deleteBank, createBank, listBank, updateBank, getBank } from "../controllers/bankAccount";
 const router = express.Router();
 
-
+router.get("/bankAccount/:id", getBank);
 /**
  * @swagger
  * tags:
