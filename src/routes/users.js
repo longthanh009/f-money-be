@@ -1,6 +1,6 @@
 import express from "express";
 import { login, logout, Registration, usersChangePassword } from "../controllers/auth";
-import { deleteUser, getUser, getUsers, searchUsers, updateUser } from "../controllers/users";
+import { deleteManyUser, deleteUser, getUser, getUsers, searchUsers, updateUser } from "../controllers/users";
 
 const router = express.Router();
 
@@ -152,7 +152,7 @@ router.post("/users/change-password", usersChangePassword);
  */
 router.get("/users/search/:key", searchUsers);
 
-
+router.delete("/users", deleteManyUser);
 
 
 export default router;
