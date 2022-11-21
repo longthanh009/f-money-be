@@ -1,5 +1,5 @@
 import express from "express";
-import { getContracts, createContracts, updateContract, deleteContract, getContract } from "../controllers/contract";
+import { getContracts, createContracts, updateContract, deleteContract, getContract, deleteManyContract } from "../controllers/contract";
 const router = express.Router();
 
 
@@ -34,7 +34,22 @@ router.put("/contract/:id", updateContract);
  *              description: This is the default response for it
  */
 router.delete("/contract/:id", deleteContract);
-
+/**
+ * @swagger
+ * tags:
+ *  name: contracts
+ *  description: This is for the main data
+ * /api/contract/:id:
+ *  delete:
+ *      tags: [contracts]
+ *      parameters:
+ *     
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+ router.delete("/contracts/", deleteManyContract);
+ 
 /**
  * @swagger
  * tags:

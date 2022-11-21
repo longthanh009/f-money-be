@@ -8,10 +8,9 @@ const JWT = '8hEnPGeoBqGUT6zksxt4G95gW+uMdzwe7EVaRnp0xRI=';
 
 // Đăng ký
 export const Registration = async(req, res) => {
-        const {name, username, password: plainTextPassword, phone, CCCD, email,birthDay } = req.body;
+        const {name, username, password: plainTextPassword, phone, email } = req.body;
         const exitsUser = await Users.findOne({ username }).exec();
         const exitsPhone = await Users.findOne({ phone }).exec();
-        const exitsCCCD = await Users.findOne({ CCCD }).exec();
         const exitsEmail = await Users.findOne({ email }).exec();
         if (exitsEmail) {
             return res.status(200).json({
@@ -26,11 +25,6 @@ export const Registration = async(req, res) => {
         if (exitsPhone) {
             return res.status(200).json({
                 error: "Số điện thoại đã tồn tại"
-            })
-        }
-        if (exitsCCCD) {
-            return res.status(200).json({
-                error: "Số CCCD đã tồn tại"
             })
         }
         if (plainTextPassword.length < 5) {
@@ -48,9 +42,6 @@ export const Registration = async(req, res) => {
                 username, 
                 password, 
                 phone, 
-                CCCD, 
-                email,
-                birthDay
             });
             res.status(200).json(response);
             console.log('Tài khoảng đăng ký thành công! : ', response)

@@ -71,3 +71,18 @@ export const searchUsers = async(req, resp) => {
     resp.send(data);
 
 }
+
+export const deleteManyUser = async(req, res) => {
+    try {
+        const response = await User.deleteMany({_id:  req.query.id})
+        res.status(200).json({
+            data: response,
+            status: 'OK'
+        });
+    } catch (error) {
+        return res.status(400).json({
+            message: error,
+            status: 'err'
+        })
+    }
+}
