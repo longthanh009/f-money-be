@@ -4,3 +4,5 @@ const router = express.Router();
 
 router.post("/contractMortgage",create);
 router.get("/contractMortgage",getContractMortgage);
+
+export default router;
