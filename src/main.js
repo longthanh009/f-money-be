@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import cors from "cors";
 import dotenv from "dotenv";
 import routerContract from './routes/contract.js'
+import routerContractMortgage from './routes/mortgageContract'
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import routerContractDetail from "./routes/contractDetail";
@@ -72,6 +73,7 @@ app.use("/api", routerBank);
 app.use("/api", routerService);
 app.use("/api", routerMenuLoan);
 app.use("/api", routerSupport);
+app.use("/api", routerContractMortgage);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 // app.use("/api/users", routeUsers);
 
