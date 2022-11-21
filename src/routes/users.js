@@ -74,6 +74,21 @@ router.delete("/users/:id", deleteUser);
  * tags:
  *  name: Users
  *  description: This is for the main data
+ * /api/users/:id:
+ *  delete:
+ *      tags: [Users]
+ *      parameters:
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+ router.delete("/users/", deleteUsers);
+
+/**
+ * @swagger
+ * tags:
+ *  name: Users
+ *  description: This is for the main data
  * /users/register:
  *  post:
  *      tags: [Users]
