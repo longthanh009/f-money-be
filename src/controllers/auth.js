@@ -73,7 +73,7 @@ export const login = async(req, res, next) => {
             JWT
         )
 
-        return res.json({ status: 'ok', data: token })
+        return res.json(req.body, { status: 'ok', data: token })
     }
 
     res.json({ status: 'error', error: 'Tên người dùng hoặc mật khẩu không hợp lệ!' })
@@ -105,7 +105,7 @@ export const usersChangePassword = async(req, res) => {
 
         const _id = user.id
 
-        const password = await bcrypt.hash(plainTextPassword, 10)
+        const password = await bcrypt.plainTextPassword
 
         await userCustomer.updateOne({ _id }, {
             $set: { password }

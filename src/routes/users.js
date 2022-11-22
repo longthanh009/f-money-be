@@ -1,6 +1,6 @@
 import express from "express";
 import { login, logout, Registration, usersChangePassword } from "../controllers/auth";
-import { deleteManyUser, deleteUser, getUser, getUsers, searchUsers, updateUser } from "../controllers/users";
+import { deleteManyUser, deleteUser, deleteUsers, getUser, getUsers, searchUsers, updateUser } from "../controllers/users";
 
 const router = express.Router();
 
