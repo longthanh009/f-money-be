@@ -1,4 +1,5 @@
 import ContractMortgage from "../models/mortgageContract";
+import User from "../models/users";
 
 export const create = async (req, res) => {
     let tong_hd;
