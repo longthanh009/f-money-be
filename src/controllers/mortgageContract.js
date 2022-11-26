@@ -87,3 +87,11 @@ export const getContractMortgage = async (req, res) => {
       res.status(400).json("Không tìm thấy dữ liệu")
     }
   }
+  export const deleteManyMortgage = async (req, res) => {
+    try {
+      const Mortgage = await ContractMortgage.deleteMany(req.body);
+      res.status(200).json(Mortgage);
+    } catch (err) {
+      res.status(400).json("Lỗi không xóa được ContractMortgage")
+    }
+  }
