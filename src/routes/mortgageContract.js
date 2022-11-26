@@ -1,8 +1,8 @@
 import express from "express";
-import { create, getContractMortgage } from "../controllers/mortgageContract";
+import { create, getContractMortgages, getContractMortgage} from "../controllers/mortgageContract";
 const router = express.Router();
 
 router.post("/contractMortgage",create);
-router.get("/contractMortgage",getContractMortgage);
-
+router.get("/contractMortgage",getContractMortgages);
+router.get("/contractMortgage/:id",getContractMortgage);
 export default router;

@@ -28,7 +28,7 @@ export const create = async (req, res) => {
         res.status(500).json({ "error": "Lỗi không tạo được hợp đồng vay tín chấp" })
     }
 }
-export const getContractMortgage = async (req, res) => {
+export const getContractMortgages = async (req, res) => {
     const user_id = req.query.id;
     const formDate = req.query.formdate;
     const toDate = req.query.todate;
@@ -78,3 +78,12 @@ export const getContractMortgage = async (req, res) => {
         return res.status(400).json({ "message": "Dữ liệu không đúng" });
     }
 }
+
+export const getContractMortgage = async (req, res) => {
+    try {
+      const ContractMortgages = await  ContractMortgage.findById(req.params.id);
+      res.status(200).json(ContractMortgages);
+    } catch (err) {
+      res.status(400).json("Không tìm thấy dữ liệu")
+    }
+  }
