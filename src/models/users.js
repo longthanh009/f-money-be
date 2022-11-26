@@ -20,6 +20,7 @@ const Users = new mongoose.Schema({
     },
     phone: { type: Number },
     email: { type: String },
+    address: { type: String },
     activate: {
         isActive: {
             type : Number

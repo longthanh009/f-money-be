@@ -1,118 +1,177 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { createError } from "../middlewares/error";
-import Users from "../models/users"
-const JWT = '8hEnPGeoBqGUT6zksxt4G95gW+uMdzwe7EVaRnp0xRI=';
-
-
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { createError } from '../middlewares/error'
+import Users from '../models/users'
+const JWT = '8hEnPGeoBqGUT6zksxt4G95gW+uMdzwe7EVaRnp0xRI='
 
 // Đăng ký
-export const Registration = async(req, res) => {
-        const {name, username, password: plainTextPassword, phone, email } = req.body;
-        const exitsUser = await Users.findOne({ username }).exec();
-        const exitsPhone = await Users.findOne({ phone }).exec();
-        const exitsEmail = await Users.findOne({ email }).exec();
-        if (exitsEmail) {
-            return res.status(200).json({
-                error: "Email đã tồn tại"
-            })
-        }
-        if (exitsUser) {
-            return res.status(200).json({
-                error: "Tên đăng nhập đã tồn tại"
-            })
-        }
-        if (exitsPhone) {
-            return res.status(200).json({
-                error: "Số điện thoại đã tồn tại"
-            })
-        }
-        if (plainTextPassword.length < 5) {
-            return res.json({
-                status: 'error',
-                error: 'Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!'
-            });
-        }
+export const Registration = async (req, res , next) => {
+  const { name, username, password, phone, email } = req.body
+    // try {
+    //   const exitsUser = await Users.findOne({ username }).exec();
+    //   const exitsPhone = await Users.findOne({ phone }).exec();
+    //   const exitsEmail = await Users.findOne({ email }).exec();
+    //   if (exitsEmail) {
+    //       return res.status(400).json({
+    //           message: "Email đã tồn tại"
+    //       })
+    //   }
+    //   if (exitsUser) {
+    //       return res.status(400).json({
+    //           message: "Tên đăng nhập đã tồn tại"
+    //       })
+    //   }
+    //   if (exitsPhone) {
+    //       return res.status(400).json({
+    //           message: "Số điện thoại đã tồn tại"
+    //       })
+    //   }
+    //   if (plainTextPassword.length < 5) {
+    //     return res.json({
+    //       status: "error",
+    //       error: "Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!",
+    //     });
+    //   }
 
-        const password = await bcrypt.hash(plainTextPassword, 10);
+    //   const password = await bcrypt.hash(plainTextPassword, 10);
 
-        try {
-            const response = await Users.create({
-                name, 
-                username, 
-                password, 
-                phone, 
-            });
-            res.status(200).json(response);
-            console.log('Tài khoảng đăng ký thành công! : ', response)
-        } catch (error) {
-            if (error.code === 11000) {
-                // duplicate key
-                return res.json({ status: 'error', error: 'Tên tài khoản đã được sử dụng!' })
-            }
-            throw error
-        }
-        res.json({ status: 'ok' })
+    //   const user = await new Users(req.body).save();
+    //   res.status(200).json({
+    //     user: {
+    //       name: user.name,
+    //       password: user.password,
+    //       username: user.username,
+    //       phone: user.phone,
+    //       email: user.email,
+    //     },
+    //   });
+    // } catch (error) {
+    //   if (error.code === 11000) {
+    //     // duplicate key
+    //     return res.json({
+    //       status: "error",
+    //       error: "Tên tài khoản đã được sử dụng!",
+    //     });
+    //   }
+    // }
+    // res.json({ status: "ok" });
+  try {
+    const exitsUser = await Users.findOne({ username }).exec()
+    const exitsPhone = await Users.findOne({ phone }).exec()
+    const exitsEmail = await Users.findOne({ email }).exec()
+
+    if (exitsEmail) {
+        return res.status(400).json({
+            message: "Email đã tồn tại"
+        })
     }
-    // Đăng nhập
-export const login = async(req, res, next) => {
-    const { username, password } = req.body;
-    const user = await Users.findOne({ username }).lean()
-
-    if (!user) {
-        return res.json({ status: 'error', error: 'Tên người dùng hoặc mật khẩu không hợp lệ!' })
+    if (exitsUser) {
+        return res.status(400).json({
+            message: "Tên đăng nhập đã tồn tại"
+        })
     }
-
-    if (await bcrypt.compare(password, user.password)) {
-        // the username, password combination is successful
-
-        const token = jwt.sign({
-                id: user._id,
-                username: user.username
-            },
-            JWT
-        )
-
-        return res.json(req.body, { status: 'ok', data: token })
+    if (exitsPhone) {
+        return res.status(400).json({
+            message: "Số điện thoại đã tồn tại"
+        })
     }
+    if (password.length < 5) {
+      return res.json({
+        status: "error",
+        error: "Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!",
+      });
+    }
+    const salt = bcrypt.genSaltSync(10)
+    const hash = bcrypt.hashSync(req.body.password, salt)
 
-    res.json({ status: 'error', error: 'Tên người dùng hoặc mật khẩu không hợp lệ!' })
-};
+    const newUser = new Users({
+      ...req.body,
+      password: hash,
+    })
+
+    await newUser.save()
+    res.status(200).json({
+      newUser: {
+        name: newUser.name,
+        password: newUser.password,
+        username: newUser.username,
+        phone: newUser.phone,
+        email: newUser.email,
+      },
+    })
+  } catch (err) {
+    next(err);
+  }
+}
+// Đăng nhập
+export const login = async (req, res) => {
+  const { username, password } = req.body
+  const user = await Users.findOne({ username }).lean()
+
+  if (!user) {
+    return res.json({
+      status: 'error',
+      error: 'Tên người dùng hoặc mật khẩu không hợp lệ!',
+    })
+  }
+
+  if (await bcrypt.compare(password, user.password)) {
+    // the username, password combination is successful
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        username: user.username,
+      },
+      JWT,
+    )
+
+    return res.json(req.body, { status: 'ok', data: token })
+  }
+
+  res.json({
+    status: 'error',
+    error: 'Tên người dùng hoặc mật khẩu không hợp lệ!',
+  })
+}
 
 // Đăng xuất
-export const logout = async(req, res) => {
-        return res
-            .clearCookie("access_token")
-            .status(200)
-            .json({ error: "Successfully logged out 😏 🍀" });
-    }
-    // Đổi mật khẩu
-export const usersChangePassword = async(req, res) => {
-    const { token, newpassword: plainTextPassword } = req.body
+export const logout = async (req, res) => {
+  return res
+    .clearCookie('access_token')
+    .status(200)
+    .json({ error: 'Successfully logged out 😏 🍀' })
+}
+// Đổi mật khẩu
+export const usersChangePassword = async (req, res) => {
+  const { token, newpassword: plainTextPassword } = req.body
 
-    if (!plainTextPassword || typeof plainTextPassword !== 'string') {
-        return res.json({ status: 'error', error: 'Mật khẩu không hợp lệ!' })
-    }
+  if (!plainTextPassword || typeof plainTextPassword !== 'string') {
+    return res.json({ status: 'error', error: 'Mật khẩu không hợp lệ!' })
+  }
 
-    if (plainTextPassword.length < 5) {
-        return res.json({
-            status: 'error',
-            error: 'Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!'
-        })
-    }
-    try {
-        const user = jwt.verify(token, JWT)
+  if (plainTextPassword.length < 5) {
+    return res.json({
+      status: 'error',
+      error: 'Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!',
+    })
+  }
+  try {
+    const user = jwt.verify(token, JWT)
 
-        const _id = user.id
+    const _id = user.id
 
-        const password = await bcrypt.plainTextPassword
+    const password = await bcrypt.plainTextPassword
 
-        await userCustomer.updateOne({ _id }, {
-            $set: { password }
-        })
-        res.json({ status: 'ok' })
-    } catch (error) {
-        console.log(error)
-        res.json({ status: 'error', error: ';))' })
-    }
+    await userCustomer.updateOne(
+      { _id },
+      {
+        $set: { password },
+      },
+    )
+    res.json({ status: 'ok' })
+  } catch (error) {
+    console.log(error)
+    res.json({ status: 'error', error: ';))' })
+  }
 }
