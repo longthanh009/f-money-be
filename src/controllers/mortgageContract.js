@@ -81,17 +81,27 @@ export const getContractMortgages = async (req, res) => {
 
 export const getContractMortgage = async (req, res) => {
     try {
-      const ContractMortgages = await  ContractMortgage.findById(req.params.id);
-      res.status(200).json(ContractMortgages);
+        const ContractMortgages = await ContractMortgage.findById(req.params.id);
+        res.status(200).json(ContractMortgages);
     } catch (err) {
-      res.status(400).json("Không tìm thấy dữ liệu")
+        res.status(400).json("Không tìm thấy dữ liệu")
     }
-  }
-  export const deleteManyMortgage = async (req, res) => {
+}
+
+export const deleteContractMortgage = async (req, res) => {
     try {
-      const Mortgage = await ContractMortgage.deleteMany(req.body);
-      res.status(200).json(Mortgage);
+        const contractMortgages = await ContractMortgage.findByIdAndDelete(req.params.id);
+        res.status(200).json(contractMortgages);
     } catch (err) {
-      res.status(400).json("Lỗi không xóa được ContractMortgage")
+        res.status(400).json("Lỗi không xóa được ContractMortgage")
     }
-  }
+}
+
+export const deleteManyMortgage = async (req, res) => {
+    try {
+        const Mortgage = await ContractMortgage.deleteMany(req.body);
+        res.status(200).json(Mortgage);
+    } catch (err) {
+        res.status(400).json("Lỗi không xóa được ContractMortgage")
+    }
+}
