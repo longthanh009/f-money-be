@@ -130,7 +130,7 @@ export const updateContract = async (req, res, next) => {
     );
     res.status(200).json(updatedContract);
   } catch (err) {
-    res.status(500).json("Lỗi update Contract!")
+    res.status(400).json("Lỗi update Contract!")
   }
 }
 export const deleteContract = async (req, res, next) => {
@@ -138,7 +138,7 @@ export const deleteContract = async (req, res, next) => {
     const contract =await Contract.findByIdAndDelete(req.params.id);
     res.status(200).json(contract);
   } catch (err) {
-    res.status(500).json("Lỗi delete Contract!")
+    res.status(400).json("Lỗi delete Contract!")
   }
 }
 export const getContract = async (req, res, next) => {
@@ -146,7 +146,7 @@ export const getContract = async (req, res, next) => {
     const contract = await Contract.findById(req.params.id);
     res.status(200).json(contract);
   } catch (err) {
-    res.status(500).json("không tìm thấy Contract")
+    res.status(400).json("không tìm thấy Contract")
   }
 }
 export const deleteManyContract = async (req, res, next) => {

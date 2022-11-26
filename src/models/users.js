@@ -20,11 +20,14 @@ const Users = new mongoose.Schema({
     },
     phone: { type: Number },
     email: { type: String },
+    address: { type: String },
     activate: {
-        Date: Number,
-        type: Boolean,
-        default: false,
-        end_date : Number,
+        isActive: {
+            type : Number
+        },
+        end_date : {
+            type : Number
+        }
     },
     status:{
         type: Boolean,
