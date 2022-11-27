@@ -99,40 +99,34 @@ export const Registration = async (req, res , next) => {
         email: newUser.email,
       },
     })
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 }
 // Đăng nhập
 export const login = async (req, res) => {
   const { username, password } = req.body
-  const user = await Users.findOne({ username }).lean()
+	const user = await Users.findOne({ username }).lean()
 
-  if (!user) {
-    return res.json({
-      status: 'error',
-      error: 'Tên người dùng hoặc mật khẩu không hợp lệ!',
-    })
-  }
+	if (!user) {
+		return res.json({ status: 'error', error: 'Tên người dùng hoặc mật khẩu không hợp lệ!' })
+	}
 
-  if (await bcrypt.compare(password, user.password)) {
-    // the username, password combination is successful
+	if (await bcrypt.compare(password, user.password)) {
+		// the username, password combination is successful
 
-    const token = jwt.sign(
-      {
-        id: user._id,
-        username: user.username,
-      },
-      JWT,
-    )
+		const token = jwt.sign(
+			{
+				id: user._id,
+				username: user.username
+			},
+			JWT
+		)
 
-    return res.json(req.body, { status: 'ok', data: token })
-  }
+		return res.json({ status: 'ok', data: token })
+	}
 
-  res.json({
-    status: 'error',
-    error: 'Tên người dùng hoặc mật khẩu không hợp lệ!',
-  })
+	res.json({ status: 'error', error: 'Tên người dùng hoặc mật khẩu không hợp lệ!' })
 }
 
 // Đăng xuất
