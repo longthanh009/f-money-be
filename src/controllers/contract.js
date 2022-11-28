@@ -9,13 +9,13 @@ export const getContracts = async (req, res) => {
     let objfind = {};
     if (formDate) {
       let end
-      objfind = { $gte: new Date(parseInt(formDate)) } 
+      objfind = { $gte: new Date(parseInt(formDate)) }
       if (toDate) {
-        end = parseInt(toDate) + (24*60*60*1000)
+        end = parseInt(toDate) + (24 * 60 * 60 * 1000)
         objfind = { $gte: new Date(parseInt(formDate)), $lt: new Date(parseInt(end)) }
       }
       try {
-        const userExits = await User.findOne({ "_id": user_id}).exec()
+        const userExits = await User.findOne({ "_id": user_id }).exec()
         if (!userExits) {
           return res.status(400).json({ "message": "Dữ liệu không đúng" });
         } else {
@@ -23,7 +23,7 @@ export const getContracts = async (req, res) => {
             const data = await Contract.find({}).exec()
             return res.status(200).json(data);
           } else {
-            const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt" : objfind }).exec()
+            const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).exec()
             return res.status(200).json(data);
           }
         }
@@ -135,7 +135,7 @@ export const updateContract = async (req, res, next) => {
 }
 export const deleteContract = async (req, res, next) => {
   try {
-    const contract =await Contract.findByIdAndDelete(req.params.id);
+    const contract = await Contract.findByIdAndDelete(req.params.id);
     res.status(200).json(contract);
   } catch (err) {
     res.status(400).json("Lỗi delete Contract!")
@@ -155,5 +155,35 @@ export const deleteManyContract = async (req, res, next) => {
     res.status(200).json(contract);
   } catch (err) {
     res.status(400).json("Lỗi delete Contract!")
+  }
+}
+export const checkCCCD = async (req, res, next) => {
+  const { cccd } = req.query;
+  if (cccd) {
+    try {
+      const countDate = await Contract.find({ "cccd": cccd, "status": 1 }).exec();
+      const count = await Contract.find({ "cccd": cccd, "status": 0 }).exec();
+      if (countDate.length >0) {
+        if (count.length >0) {
+          res.status(200).json({ "message": `Đã có ${count.length} hợp đồng chưa hoàn tất và ${countDate.length} hợp đồng quá hạn.` });
+          return;
+        } else {
+          res.status(200).json({ "message": `Đã có ${countDate.length} hợp đồng quá hạn.` });
+          return;
+        }
+      }
+      if (count.length >0) {
+        res.status(200).json({ "message": `Đã có ${count.length} hợp đồng chưa hoàn tất.` });
+        return;
+      }
+      res.status(200).json({ "message": `Chưa có hợp đồng nào trong hệ thống.` });
+      return;
+    } catch (err) {
+      res.status(400).json({ "message": `Không lấy được thông tin` });
+      return;
+    }
+  } else {
+    res.status(400).json("Dữ liệu không đúng");
+    return;
   }
 }
