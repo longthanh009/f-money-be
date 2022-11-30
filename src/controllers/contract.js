@@ -1,6 +1,9 @@
 import Contract from "../models/contract";
 import User from "../models/users";
 import mongoose from "mongoose";
+const excel = require('node-excel-export');
+
+
 export const getContracts = async (req, res) => {
   const user_id = req.query.id;
   const formDate = req.query.formdate;
@@ -163,8 +166,8 @@ export const checkCCCD = async (req, res, next) => {
     try {
       const countDate = await Contract.find({ "cccd": cccd, "status": 1 }).exec();
       const count = await Contract.find({ "cccd": cccd, "status": 0 }).exec();
-      if (countDate.length >0) {
-        if (count.length >0) {
+      if (countDate.length > 0) {
+        if (count.length > 0) {
           res.status(200).json({ "message": `Đã có ${count.length} hợp đồng chưa hoàn tất và ${countDate.length} hợp đồng quá hạn.` });
           return;
         } else {
@@ -172,7 +175,7 @@ export const checkCCCD = async (req, res, next) => {
           return;
         }
       }
-      if (count.length >0) {
+      if (count.length > 0) {
         res.status(200).json({ "message": `Đã có ${count.length} hợp đồng chưa hoàn tất.` });
         return;
       }
@@ -186,4 +189,92 @@ export const checkCCCD = async (req, res, next) => {
     res.status(400).json("Dữ liệu không đúng");
     return;
   }
+}
+export const contractsExcel = async (req, res, next) => {
+  const styles = {
+    headerDark: {
+      fill: {
+        fgColor: {
+          rgb: 'FF000000'
+        }
+      },
+      font: {
+        color: {
+          rgb: 'FFFFFFFF'
+        },
+        sz: 14,
+        bold: true,
+        underline: true
+      }
+    },
+    cellPink: {
+      fill: {
+        fgColor: {
+          rgb: 'FFFFCCFF'
+        }
+      }
+    },
+    cellGreen: {
+      fill: {
+        fgColor: {
+          rgb: 'FF00FF00'
+        }
+      }
+    }
+  };
+
+  const heading = [
+    [{ value: 'a1', style: styles.headerDark }, { value: 'b1', style: styles.headerDark }, { value: 'c1', style: styles.headerDark }],
+    ['a2', 'b2', 'c2']
+  ];
+
+  const specification = {
+    customer_name: {
+      displayName: 'Customer',
+      headerStyle: styles.headerDark, 
+      cellStyle: function (value, row) {
+        return (row.status_id == 1) ? styles.cellGreen : { fill: { fgColor: { rgb: 'FFFF0000' } } };
+      },
+      width: 120
+    },
+    status_id: {
+      displayName: 'Status',
+      headerStyle: styles.cellPink,
+      cellFormat: function (value, row) {
+        return (value == 1) ? 'Active' : 'Inactive';
+      },
+      width: '10'
+    },
+    note: {
+      displayName: 'Description',
+      headerStyle: styles.headerDark,
+      cellStyle: styles.cellPink,
+      width: 220
+    }
+  }
+
+  const dataset = [
+    { customer_name: 'IBM', status_id: 1, note: 'some note', misc: 'not shown' },
+    { customer_name: 'HP', status_id: 0, note: 'some note' },
+    { customer_name: 'MS', status_id: 0, note: 'some note', misc: 'not shown' }
+  ]
+  const merges = [
+    { start: { row: 1, column: 1 }, end: { row: 1, column: 10 } },
+    { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
+    { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
+  ]
+
+  const report = excel.buildExport(
+    [
+      {
+        name: 'Report', 
+        heading: heading,
+        merges: merges,
+        specification: specification,
+        data: dataset
+      }
+    ]
+  );
+  res.attachment('report.xlsx');
+  return res.send(report);
 }

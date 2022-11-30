@@ -1,5 +1,5 @@
 import express from "express";
-import { getContracts, createContracts, updateContract, deleteContract, getContract, deleteManyContract, checkCCCD } from "../controllers/contract";
+import { getContracts, createContracts, updateContract, deleteContract, getContract, deleteManyContract, checkCCCD, contractsExcel } from "../controllers/contract";
 const router = express.Router();
 
 
@@ -98,5 +98,6 @@ router.get("/contracts", getContracts);
  */
 router.post("/contracts", createContracts)
 router.get("/checkUser", checkCCCD)
+router.get("/contractExcel", contractsExcel)
 
 export default router;
