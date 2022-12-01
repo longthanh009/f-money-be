@@ -195,30 +195,16 @@ export const contractsExcel = async (req, res, next) => {
     headerDark: {
       fill: {
         fgColor: {
-          rgb: 'FF000000'
+          rgb: '226F37'
         }
       },
       font: {
         color: {
           rgb: 'FFFFFFFF'
         },
-        sz: 14,
+        sz: 12,
         bold: true,
-        underline: true
-      }
-    },
-    cellPink: {
-      fill: {
-        fgColor: {
-          rgb: 'FFFFCCFF'
-        }
-      }
-    },
-    cellGreen: {
-      fill: {
-        fgColor: {
-          rgb: 'FF00FF00'
-        }
+        underline: false
       }
     }
   };
@@ -227,54 +213,156 @@ export const contractsExcel = async (req, res, next) => {
     [{ value: 'a1', style: styles.headerDark }, { value: 'b1', style: styles.headerDark }, { value: 'c1', style: styles.headerDark }],
     ['a2', 'b2', 'c2']
   ];
-
   const specification = {
-    customer_name: {
-      displayName: 'Customer',
-      headerStyle: styles.headerDark, 
-      cellStyle: function (value, row) {
-        return (row.status_id == 1) ? styles.cellGreen : { fill: { fgColor: { rgb: 'FFFF0000' } } };
-      },
+    ma_hd: {
+      displayName: 'Mã hợp đồng',
+      headerStyle: styles.headerDark,
+      width: 80
+    },
+    ten_khach_hang: {
+      displayName: 'Tên Khách Hàng',
+      headerStyle: styles.headerDark,
       width: 120
     },
-    status_id: {
-      displayName: 'Status',
-      headerStyle: styles.cellPink,
-      cellFormat: function (value, row) {
-        return (value == 1) ? 'Active' : 'Inactive';
+    dien_thoai: {
+      displayName: 'Điện Thoại',
+      cellFormat: function(value, row) {
+        return `0${value}`;
       },
-      width: '10'
-    },
-    note: {
-      displayName: 'Description',
       headerStyle: styles.headerDark,
-      cellStyle: styles.cellPink,
+      width: 150
+    },
+    dia_chi: {
+      displayName: 'Địa chỉ',
+      headerStyle: styles.headerDark,
+      width: 320
+    },
+    khoan_vay: {
+      displayName: 'Khoản vay',
+      headerStyle: styles.headerDark,
+      width: 120
+    },
+    lai_xuat: {
+      displayName: 'Lãi xuất',
+      headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        return `${value} %`;
+      },
+      width: 60
+    },
+    tong_hd: {
+      displayName: 'Tổng hợp đồng',
+      headerStyle: styles.headerDark,
+      width: 120
+    },
+    han_vay: {
+      displayName: 'Hạn vay',
+      cellFormat: function(value, row) {
+        return `${value} ngày`;
+      },
+      headerStyle: styles.headerDark,
+      width: 100
+    },
+    han_tra: {
+      displayName: 'Hạn trả /lần',
+      cellFormat: function(value, row) {
+        return `${value}ngày / 1 lần`;
+      },
+      headerStyle: styles.headerDark,
+      width: 100
+    },
+    // han_thanh_toan: {
+    //   displayName: 'Hạn trả /lần',
+    //   cellFormat: function(value, row) {
+    //     return `${value}ngày / 1 lần`;
+    //   },
+    //   headerStyle: styles.headerDark,
+    //   width: 100
+    // },
+    cccd: {
+      displayName: 'Số CCCD',
+      headerStyle: styles.headerDark,
+      width: 100
+    },
+    status: {
+      displayName: 'Trạng thái',
+      headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        return (value == 0) ? 'Đang vay' : (value == 1) ? 'Quá hạn' : "Hoàn tất";
+      },
+      width: 100
+    },
+    da_thanh_toan: {
+      displayName: 'Đã thanh toán',
+      headerStyle: styles.headerDark,
+      width: 150
+    },
+    han_hd: {
+      displayName: 'Hạn hợp đồng',
+      headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        var date = new Date(value);
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      },
+      width: 100
+    },
+    ghi_chu: {
+      displayName: 'Ghi chú',
+      headerStyle: styles.headerDark,
       width: 220
     }
   }
-
-  const dataset = [
-    { customer_name: 'IBM', status_id: 1, note: 'some note', misc: 'not shown' },
-    { customer_name: 'HP', status_id: 0, note: 'some note' },
-    { customer_name: 'MS', status_id: 0, note: 'some note', misc: 'not shown' }
-  ]
   const merges = [
     { start: { row: 1, column: 1 }, end: { row: 1, column: 10 } },
     { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
     { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
   ]
+  const { id } = req.query;
+  if (id) {
+    try {
+      const userExits = await User.findOne({ "_id": id }).exec();
+      if (!userExits) {
+        return res.status(400).json({ "message": "Dữ liệu không đúng" });
+      } else {
+        if (userExits.role == 2) {
+          const data = await Contract.find({}).exec();
+          const report = excel.buildExport(
+            [
+              {
+                name: 'Report',
+                heading: heading,
+                merges: merges,
+                specification: specification,
+                data: data
+              }
+            ]
+          );
+          res.attachment('report.xlsx');
+          return res.send(report);
+        } else {
+          const data = await Contract.find({ "nguoi_tao_hd": id }).exec();
+          const report = excel.buildExport(
+            [
+              {
+                name: 'Contracts',
+                heading: heading,
+                merges: merges,
+                specification: specification,
+                data: data
+              }
+            ]
+          );
+          res.attachment('contracts.xlsx');
+          return res.send(report);
 
-  const report = excel.buildExport(
-    [
-      {
-        name: 'Report', 
-        heading: heading,
-        merges: merges,
-        specification: specification,
-        data: dataset
+        }
       }
-    ]
-  );
-  res.attachment('report.xlsx');
-  return res.send(report);
+    } catch (error) {
+      res.status(400).json({ "message": `Dữ liệu không đúng` });
+      return;
+    }
+  } else {
+    res.status(400).json({ "message": `Dữ liệu không đúng` });
+    return;
+  }
 }
