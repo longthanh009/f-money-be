@@ -240,6 +240,9 @@ export const contractsExcel = async (req, res, next) => {
     khoan_vay: {
       displayName: 'Khoản vay',
       headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+      },
       width: 120
     },
     lai_xuat: {
@@ -253,6 +256,9 @@ export const contractsExcel = async (req, res, next) => {
     tong_hd: {
       displayName: 'Tổng hợp đồng',
       headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+      },
       width: 120
     },
     han_vay: {
@@ -295,6 +301,9 @@ export const contractsExcel = async (req, res, next) => {
     da_thanh_toan: {
       displayName: 'Đã thanh toán',
       headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+      },
       width: 150
     },
     han_hd: {
