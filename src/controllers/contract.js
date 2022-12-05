@@ -1,6 +1,9 @@
 import Contract from "../models/contract";
 import User from "../models/users";
 import mongoose from "mongoose";
+const excel = require('node-excel-export');
+
+
 export const getContracts = async (req, res) => {
   const user_id = req.query.id;
   const formDate = req.query.formdate;
@@ -163,8 +166,8 @@ export const checkCCCD = async (req, res, next) => {
     try {
       const countDate = await Contract.find({ "cccd": cccd, "status": 1 }).exec();
       const count = await Contract.find({ "cccd": cccd, "status": 0 }).exec();
-      if (countDate.length >0) {
-        if (count.length >0) {
+      if (countDate.length > 0) {
+        if (count.length > 0) {
           res.status(200).json({ "message": `Đã có ${count.length} hợp đồng chưa hoàn tất và ${countDate.length} hợp đồng quá hạn.` });
           return;
         } else {
@@ -172,7 +175,7 @@ export const checkCCCD = async (req, res, next) => {
           return;
         }
       }
-      if (count.length >0) {
+      if (count.length > 0) {
         res.status(200).json({ "message": `Đã có ${count.length} hợp đồng chưa hoàn tất.` });
         return;
       }
@@ -184,6 +187,191 @@ export const checkCCCD = async (req, res, next) => {
     }
   } else {
     res.status(400).json("Dữ liệu không đúng");
+    return;
+  }
+}
+export const contractsExcel = async (req, res, next) => {
+  const styles = {
+    headerDark: {
+      fill: {
+        fgColor: {
+          rgb: '226F37'
+        }
+      },
+      font: {
+        color: {
+          rgb: 'FFFFFFFF'
+        },
+        sz: 12,
+        bold: true,
+        underline: false
+      }
+    }
+  };
+
+  const heading = [
+    [{ value: 'a1', style: styles.headerDark }, { value: 'b1', style: styles.headerDark }, { value: 'c1', style: styles.headerDark }],
+    ['a2', 'b2', 'c2']
+  ];
+  const specification = {
+    ma_hd: {
+      displayName: 'Mã hợp đồng',
+      headerStyle: styles.headerDark,
+      width: 80
+    },
+    ten_khach_hang: {
+      displayName: 'Tên Khách Hàng',
+      headerStyle: styles.headerDark,
+      width: 120
+    },
+    dien_thoai: {
+      displayName: 'Điện Thoại',
+      cellFormat: function(value, row) {
+        return `0${value}`;
+      },
+      headerStyle: styles.headerDark,
+      width: 150
+    },
+    dia_chi: {
+      displayName: 'Địa chỉ',
+      headerStyle: styles.headerDark,
+      width: 320
+    },
+    khoan_vay: {
+      displayName: 'Khoản vay',
+      headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+      },
+      width: 120
+    },
+    lai_xuat: {
+      displayName: 'Lãi xuất',
+      headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        return `${value} %`;
+      },
+      width: 60
+    },
+    tong_hd: {
+      displayName: 'Tổng hợp đồng',
+      headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+      },
+      width: 120
+    },
+    han_vay: {
+      displayName: 'Hạn vay',
+      cellFormat: function(value, row) {
+        return `${value} ngày`;
+      },
+      headerStyle: styles.headerDark,
+      width: 100
+    },
+    han_tra: {
+      displayName: 'Hạn trả /lần',
+      cellFormat: function(value, row) {
+        return `${value}ngày / 1 lần`;
+      },
+      headerStyle: styles.headerDark,
+      width: 100
+    },
+    // han_thanh_toan: {
+    //   displayName: 'Hạn trả /lần',
+    //   cellFormat: function(value, row) {
+    //     return `${value}ngày / 1 lần`;
+    //   },
+    //   headerStyle: styles.headerDark,
+    //   width: 100
+    // },
+    cccd: {
+      displayName: 'Số CCCD',
+      headerStyle: styles.headerDark,
+      width: 100
+    },
+    status: {
+      displayName: 'Trạng thái',
+      headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        return (value == 0) ? 'Đang vay' : (value == 1) ? 'Quá hạn' : "Hoàn tất";
+      },
+      width: 100
+    },
+    da_thanh_toan: {
+      displayName: 'Đã thanh toán',
+      headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+      },
+      width: 150
+    },
+    han_hd: {
+      displayName: 'Hạn hợp đồng',
+      headerStyle: styles.headerDark,
+      cellFormat: function(value, row) {
+        var date = new Date(value);
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      },
+      width: 100
+    },
+    ghi_chu: {
+      displayName: 'Ghi chú',
+      headerStyle: styles.headerDark,
+      width: 220
+    }
+  }
+  const merges = [
+    { start: { row: 1, column: 1 }, end: { row: 1, column: 10 } },
+    { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
+    { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
+  ]
+  const { id } = req.query;
+  if (id) {
+    try {
+      const userExits = await User.findOne({ "_id": id }).exec();
+      if (!userExits) {
+        return res.status(400).json({ "message": "Dữ liệu không đúng" });
+      } else {
+        if (userExits.role == 2) {
+          const data = await Contract.find({}).exec();
+          const report = excel.buildExport(
+            [
+              {
+                name: 'Report',
+                heading: heading,
+                merges: merges,
+                specification: specification,
+                data: data
+              }
+            ]
+          );
+          res.attachment('report.xlsx');
+          return res.send(report);
+        } else {
+          const data = await Contract.find({ "nguoi_tao_hd": id }).exec();
+          const report = excel.buildExport(
+            [
+              {
+                name: 'Contracts',
+                heading: heading,
+                merges: merges,
+                specification: specification,
+                data: data
+              }
+            ]
+          );
+          res.attachment('contracts.xlsx');
+          return res.send(report);
+
+        }
+      }
+    } catch (error) {
+      res.status(400).json({ "message": `Dữ liệu không đúng` });
+      return;
+    }
+  } else {
+    res.status(400).json({ "message": `Dữ liệu không đúng` });
     return;
   }
 }
