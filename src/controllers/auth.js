@@ -84,12 +84,7 @@ export const Registration = async (req, res , next) => {
     const salt = bcrypt.genSaltSync(10)
     const hash = bcrypt.hashSync(req.body.password, salt)
 
-    const newUser = new Users({
-      ...req.body,
-      password: hash,
-    })
-
-    await newUser.save()
+    const newUser = await new Users({...req.body,password: hash,}).save()
     res.status(200).json({
       newUser: {
         name: newUser.name,
@@ -100,7 +95,10 @@ export const Registration = async (req, res , next) => {
       },
     })
   } catch (error) {
-    next(error);
+    return res.status(400).json({
+      status: "error",
+      error: "Đăng ký không thành công",
+    });
   }
 }
 // Đăng nhập
@@ -118,7 +116,8 @@ export const login = async (req, res) => {
 		const token = jwt.sign(
 			{
 				id: user._id,
-				username: user.username
+				username: user.username,
+        role : user.role
 			},
 			JWT
 		)

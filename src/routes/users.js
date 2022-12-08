@@ -1,6 +1,6 @@
 import express from "express";
 import { login, logout, Registration, usersChangePassword } from "../controllers/auth";
-import { deleteManyUser, deleteUser, deleteUsers, getUser, getUsers, searchUsers, updateUser } from "../controllers/users";
+import { deleteManyUser, deleteUser, getUser, getUsers, searchUsers, updateUser } from "../controllers/users";
 
 const router = express.Router();
 
@@ -19,6 +19,8 @@ const router = express.Router();
  *              description: This is the default response for it
  */
 router.get("/users", getUsers);
+
+
 
 /**
  * @swagger
@@ -82,7 +84,7 @@ router.delete("/users/:id", deleteUser);
  *          default:
  *              description: This is the default response for it
  */
- router.delete("/users/", deleteUsers);
+//  router.delete("/users/", deleteUsers);
 
 /**
  * @swagger
