@@ -363,7 +363,6 @@ export const contractsExcel = async (req, res, next) => {
           );
           res.attachment('contracts.xlsx');
           return res.send(report);
-
         }
       }
     } catch (error) {

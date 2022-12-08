@@ -19,14 +19,14 @@ export const deleteUser = async(req, res, next) => {
         next(err);
     }
 }
-export const deleteUsers = async(req, res, next) => {
-    try {
-        const user = await User.deleteMany(req.body);
-        res.status(200).json(user);
-    } catch (err) {
-        next(err);
-    }
-}
+// export const deleteUsers = async(req, res, next) => {
+//     try {
+//         const user = await User.deleteMany(req.body);
+//         res.status(200).json(user);
+//     } catch (err) {
+//         next(err);
+//     }
+// }
 export const getUser = async(req, res, next) => {
     try {
         const user = await User.findById({ _id: req.params.id }).exec();
@@ -75,6 +75,7 @@ export const searchUsers = async(req, resp) => {
 export const deleteManyUser = async(req, res) => {
     try {
         const response = await User.deleteMany({_id:  req.query.id})
+        console.log(response)
         res.status(200).json({
             data: response,
             status: 'OK'
