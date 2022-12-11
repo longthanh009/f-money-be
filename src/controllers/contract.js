@@ -150,7 +150,7 @@ export const updateContract = async (req, res, next) => {
         stt = 2
       }
       const newContract = await Contract.updateOne({"_id": id},{"han_thanh_toan" : newArrTT,"da_thanh_toan" :thanh_toan,"status": stt});
-      res.status(200).json("Cập nhật thành công !");
+      res.status(200).json(newContract);
     } else {
       res.status(400).json("Hợp đồng không tồn tại hoặc đã bị xoá!");
     }
