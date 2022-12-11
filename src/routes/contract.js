@@ -17,7 +17,7 @@ const router = express.Router();
  *          default:
  *              description: This is the default response for it
  */
-router.put("/contract/:id", updateContract);
+router.patch("/contract/:id", updateContract);
 
 /**
  * @swagger

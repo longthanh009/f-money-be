@@ -79,7 +79,7 @@ export const createContracts = async (req, res) => {
       let his = {
         "ngay": time + (a * 24 * 60 * 60 * 1000),
         "tien": dong_1 * cout,
-        "trang_thai": 0
+        "trang_thai": false
       }
       arrDong.push(his);
     }
@@ -125,15 +125,37 @@ export const createContracts = async (req, res) => {
 }
 
 export const updateContract = async (req, res, next) => {
+  const {id} = req.params
+  const {date, status } = req.body;
   try {
-    const updatedContract = await Contract.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true }
-    );
-    res.status(200).json(updatedContract);
+    const contract = await Contract.findOne({ "_id": id }).exec();
+    if (contract) {
+      let newArrTT = [];
+      let thanh_toan =0;
+      let stt = 0;
+      for (let i = 0; i < contract.han_thanh_toan.length; i++) {
+        let childrenCt = contract.han_thanh_toan[i];
+        console.log(childrenCt);
+        newArrTT.push(childrenCt);
+        if (childrenCt.ngay == date) {
+          childrenCt.trang_thai = status;
+          if (status == true) {
+            thanh_toan = contract.da_thanh_toan + childrenCt.tien;
+          } else {
+
+          }
+        }
+      }
+      if(contract.tong_hd == (contract.da_thanh_toan + thanh_toan)){
+        stt = 2
+      }
+      const newContract = await Contract.updateOne({"_id": id},{"han_thanh_toan" : newArrTT,"da_thanh_toan" :thanh_toan,"status": stt});
+      res.status(200).json("Cập nhật thành công !");
+    } else {
+      res.status(400).json("Hợp đồng không tồn tại hoặc đã bị xoá!");
+    }
   } catch (err) {
-    res.status(400).json("Lỗi update Contract!")
+    res.status(400).json("Lỗi update Contract!");
   }
 }
 export const deleteContract = async (req, res, next) => {
@@ -226,7 +248,7 @@ export const contractsExcel = async (req, res, next) => {
     },
     dien_thoai: {
       displayName: 'Điện Thoại',
-      cellFormat: function(value, row) {
+      cellFormat: function (value, row) {
         return `0${value}`;
       },
       headerStyle: styles.headerDark,
@@ -240,7 +262,7 @@ export const contractsExcel = async (req, res, next) => {
     khoan_vay: {
       displayName: 'Khoản vay',
       headerStyle: styles.headerDark,
-      cellFormat: function(value, row) {
+      cellFormat: function (value, row) {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
       },
       width: 120
@@ -248,7 +270,7 @@ export const contractsExcel = async (req, res, next) => {
     lai_xuat: {
       displayName: 'Lãi xuất',
       headerStyle: styles.headerDark,
-      cellFormat: function(value, row) {
+      cellFormat: function (value, row) {
         return `${value} %`;
       },
       width: 60
@@ -256,14 +278,14 @@ export const contractsExcel = async (req, res, next) => {
     tong_hd: {
       displayName: 'Tổng hợp đồng',
       headerStyle: styles.headerDark,
-      cellFormat: function(value, row) {
+      cellFormat: function (value, row) {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
       },
       width: 120
     },
     han_vay: {
       displayName: 'Hạn vay',
-      cellFormat: function(value, row) {
+      cellFormat: function (value, row) {
         return `${value} ngày`;
       },
       headerStyle: styles.headerDark,
@@ -271,7 +293,7 @@ export const contractsExcel = async (req, res, next) => {
     },
     han_tra: {
       displayName: 'Hạn trả /lần',
-      cellFormat: function(value, row) {
+      cellFormat: function (value, row) {
         return `${value}ngày / 1 lần`;
       },
       headerStyle: styles.headerDark,
@@ -293,7 +315,7 @@ export const contractsExcel = async (req, res, next) => {
     status: {
       displayName: 'Trạng thái',
       headerStyle: styles.headerDark,
-      cellFormat: function(value, row) {
+      cellFormat: function (value, row) {
         return (value == 0) ? 'Đang vay' : (value == 1) ? 'Quá hạn' : "Hoàn tất";
       },
       width: 100
@@ -301,7 +323,7 @@ export const contractsExcel = async (req, res, next) => {
     da_thanh_toan: {
       displayName: 'Đã thanh toán',
       headerStyle: styles.headerDark,
-      cellFormat: function(value, row) {
+      cellFormat: function (value, row) {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
       },
       width: 150
@@ -309,7 +331,7 @@ export const contractsExcel = async (req, res, next) => {
     han_hd: {
       displayName: 'Hạn hợp đồng',
       headerStyle: styles.headerDark,
-      cellFormat: function(value, row) {
+      cellFormat: function (value, row) {
         var date = new Date(value);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
       },
