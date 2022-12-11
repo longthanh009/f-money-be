@@ -57,7 +57,8 @@ export const createSp = async (req, res) => {
 export const getSupportCs = async (req, res) => {
     const { id } = req.query;
     if (id) {
-        const userExits = User.findOne({ "_id": id })
+        const userExits = await User.findOne({ "_id": id }).exec();
+        console.log(userExits);
         if (!userExits) {
             return res.status(200).json({ "error": "Dữ liệu không đúng" });
         } else {
@@ -69,7 +70,7 @@ export const getSupportCs = async (req, res) => {
                     return res.status(400).json({ "error": "Lỗi không thêm được dữ liệu" });
                 }
             } else{
-                return res.status(403).json({ "error": "Bạn không có quyền truy cập" });
+                return res.status(401).json({ "error": "Bạn không có quyền truy cập" });
             }
         }
     } else {
