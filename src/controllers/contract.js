@@ -142,7 +142,7 @@ export const updateContract = async (req, res, next) => {
           if (status == true) {
             thanh_toan = contract.da_thanh_toan + childrenCt.tien;
           } else {
-
+            thanh_toan = contract.da_thanh_toan - childrenCt.tien;
           }
         }
       }
