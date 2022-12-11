@@ -54,7 +54,6 @@ export const getContracts = async (req, res) => {
     return res.status(400).json({ "message": "Dữ liệu không đúng" });
   }
 }
-
 export const createContracts = async (req, res) => {
   const { ma_hd, ten_khach_hang, cccd, dien_thoai, dia_chi, khoan_vay, lai_xuat } = req.body;
   const { han_vay, han_tra, ghi_chu, nguoi_tao_hd } = req.body;
@@ -78,7 +77,7 @@ export const createContracts = async (req, res) => {
       a += parseInt(cout)
       let his = {
         "ngay": time + (a * 24 * 60 * 60 * 1000),
-        "tien": dong_1 * cout,
+        "tien": dong_1 * parseInt(han_tra),
         "trang_thai": false
       }
       arrDong.push(his);
@@ -90,7 +89,7 @@ export const createContracts = async (req, res) => {
       a += parseInt(cout)
       let his = {
         "ngay": time + (a * 24 * 60 * 60 * 1000),
-        "tien": dong_1 * parseInt(cout),
+        "tien": dong_1 * parseInt(han_tra),
         "trang_thai": 0
       }
       arrDong.push(his);
@@ -123,7 +122,6 @@ export const createContracts = async (req, res) => {
     return res.status(400).json({ "message": error })
   }
 }
-
 export const updateContract = async (req, res, next) => {
   const {id} = req.params
   const {date, status } = req.body;
