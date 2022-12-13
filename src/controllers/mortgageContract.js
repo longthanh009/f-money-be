@@ -1,5 +1,6 @@
 import ContractMortgage from "../models/mortgageContract";
 import User from "../models/users";
+const excel = require('node-excel-export');
 
 export const create = async (req, res) => {
     let tong_hd;
@@ -103,5 +104,173 @@ export const deleteManyMortgage = async (req, res) => {
         res.status(200).json(Mortgage);
     } catch (err) {
         res.status(400).json("Lỗi không xóa được ContractMortgage")
+    }
+}
+export const contractsMgExcel = async (req, res, next) => {
+    const styles = {
+        headerDark: {
+            fill: {
+                fgColor: {
+                    rgb: '226F37'
+                }
+            },
+            font: {
+                color: {
+                    rgb: 'FFFFFFFF'
+                },
+                sz: 12,
+                bold: true,
+                underline: false
+            }
+        }
+    };
+
+    const heading = [
+        [{ value: 'a1', style: styles.headerDark }, { value: 'b1', style: styles.headerDark }, { value: 'c1', style: styles.headerDark }],
+        ['a2', 'b2', 'c2']
+    ];
+    const specification = {
+        ma_hd: {
+            displayName: 'Mã hợp đồng',
+            headerStyle: styles.headerDark,
+            width: 80
+        },
+        ten_khach_hang: {
+            displayName: 'Tên Khách Hàng',
+            headerStyle: styles.headerDark,
+            width: 120
+        },
+        dien_thoai: {
+            displayName: 'Điện Thoại',
+            cellFormat: function (value, row) {
+                return `0${value}`;
+            },
+            headerStyle: styles.headerDark,
+            width: 150
+        },
+        dia_chi: {
+            displayName: 'Địa chỉ',
+            headerStyle: styles.headerDark,
+            width: 320
+        },
+        khoan_vay: {
+            displayName: 'Khoản vay',
+            headerStyle: styles.headerDark,
+            cellFormat: function (value, row) {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+            },
+            width: 120
+        },
+        cccd: {
+            displayName: 'CCCD',
+            headerStyle: styles.headerDark,
+            cellFormat: function (value, row) {
+                return `${value} `;
+            },
+            width: 150
+        },
+        phi_dv: {
+            displayName: 'Phí dịch vụ',
+            headerStyle: styles.headerDark,
+            cellFormat: function (value, row) {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+            },
+            width: 120
+        },
+        tong_hd: {
+            displayName: 'Tổng hợp đồng',
+            headerStyle: styles.headerDark,
+            cellFormat: function (value, row) {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+            },
+            width: 120
+        },
+        han_vay: {
+            displayName: 'Hạn vay',
+            cellFormat: function (value, row) {
+                return `${value} ngày`;
+            },
+            headerStyle: styles.headerDark,
+            width: 100
+        },
+        thong_tin: {
+            displayName: 'Thông tin tài sản',
+            headerStyle: styles.headerDark,
+            width: 100
+        },
+        status: {
+            displayName: 'Trạng thái',
+            headerStyle: styles.headerDark,
+            cellFormat: function (value, row) {
+                return (value == 0) ? 'Đang vay' : (value == 1) ? 'Quá hạn' : "Hoàn tất";
+            },
+            width: 100
+        },
+        han_hd: {
+            displayName: 'Hạn hợp đồng',
+            headerStyle: styles.headerDark,
+            cellFormat: function (value, row) {
+                var date = new Date(value);
+                return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+            },
+            width: 100
+        },
+        ghi_chu: {
+            displayName: 'Ghi chú',
+            headerStyle: styles.headerDark,
+            width: 220
+        }
+    }
+    const merges = [
+        { start: { row: 1, column: 1 }, end: { row: 1, column: 10 } },
+        { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
+        { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
+    ]
+    const { id } = req.query;
+    if (id) {
+        try {
+            const userExits = await User.findOne({ "_id": id }).exec();
+            if (!userExits) {
+                return res.status(400).json({ "message": "Dữ liệu không đúng" });
+            } else {
+                if (userExits.role == 2) {
+                    const data = await ContractMortgage.find({}).exec();
+                    const report = excel.buildExport(
+                        [
+                            {
+                                name: 'Report',
+                                heading: heading,
+                                merges: merges,
+                                specification: specification,
+                                data: data
+                            }
+                        ]
+                    );
+                    res.attachment('report.xlsx');
+                    return res.send(report);
+                } else {
+                    const data = await ContractMortgage.find({ "nguoi_tao_hd": id }).exec();
+                    const report = excel.buildExport(
+                        [
+                            {
+                                name: 'ContractsMortgage',
+                                heading: heading,
+                                merges: merges,
+                                specification: specification,
+                                data: data
+                            }
+                        ]
+                    );
+                    res.attachment('contracts.xlsx');
+                    return res.send(report);
+                }
+            }
+        } catch (error) {
+            res.status(400).json({ "message": `Dữ liệu không đúng` });
+            return;
+        }
+    } else {
+        res.status(400).json({ "message": `Dữ liệu không đúng` });
+        return;
     }
 }
