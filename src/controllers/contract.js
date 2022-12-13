@@ -144,11 +144,9 @@ export const updateContract = async (req, res, next) => {
           }
         }
       }
-      console.log("Tổnghd",contract.tong_hd);
       if(contract.tong_hd == thanh_toan){
         stt = 2
       }
-      console.log("stt",stt);
       const newContract = await Contract.updateOne({"_id": id},{"han_thanh_toan" : newArrTT,"da_thanh_toan" :thanh_toan,"status": stt});
       res.status(200).json(newContract);
     } else {
