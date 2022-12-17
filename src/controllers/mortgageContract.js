@@ -274,3 +274,13 @@ export const contractsMgExcel = async (req, res, next) => {
         return;
     }
 }
+
+export const autoUpdateContractMg = async (date) => {
+    const contracts = await ContractMortgage.find({}).exec();
+    for (let i = 0; i < contracts.length; i++) {
+        const element = contracts[i];
+        if (itemData.han_hd + (24 * 60 * 60 * 1000) < date && itemData.trang_thai == false) {
+            const newContract = await ContractMortgage.updateOne({ "_id": element._id }, { "status": 1 }).exec();
+        }
+    }
+}

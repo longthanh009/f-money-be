@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
 import cors from "cors";
+
 import dotenv from "dotenv";
 import routerContract from './routes/contract.js'
 import routerContractMortgage from './routes/mortgageContract'
@@ -15,7 +16,10 @@ import routerMenuLoan from "./routes/menuLoan";
 import routerSupport from "./routes/supportCs";
 import path from "path";
 import routerService from "./routes/servicePack";
+import {autoUpdateContract} from "./controllers/contract";
+import {autoUpdateContractMg} from "./controllers/mortgageContract";
 
+const cron = require('node-cron');
 
 
 // import routeAuth from "./routes/use.js"
@@ -39,7 +43,7 @@ const options = {
         },
         servers: [{
             url: "http://localhost:9000",
-        }, ],
+        },],
         components: {
             securitySchemes: {
                 bearerAuth: {
@@ -51,9 +55,9 @@ const options = {
         },
         security: [{
             bearerAuth: [],
-        }, ],
+        },],
     },
-    apis: [`${path.join(__dirname,"./routes/*.js")}`],
+    apis: [`${path.join(__dirname, "./routes/*.js")}`],
 };
 const swaggerSpecs = swaggerJSDoc(options);
 
@@ -75,6 +79,14 @@ app.use("/api", routerContractMortgage);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 // app.use("/api/users", routeUsers);
 
+cron.schedule('00 30 23 * * 0-6', () => {
+    var dataDa = new Date().getTime();
+    autoUpdateContract(dataDa + (24 * 60 * 60 *1000));
+    autoUpdateContractMg(dataDa + (24 * 60 * 60 *1000));
+}, {
+    scheduled: true,
+    timezone: 'Asia/Ho_Chi_Minh'
+});
 
 app.listen(PORT, () => {
     console.log(`APi is Running on http://localhost:${PORT}`);
