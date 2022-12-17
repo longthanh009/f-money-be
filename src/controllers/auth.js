@@ -117,7 +117,8 @@ export const login = async (req, res) => {
 			{
 				id: user._id,
 				username: user.username,
-        role : user.role
+        role : user.role,
+        activate : user.activate.end_date
 			},
 			JWT
 		)

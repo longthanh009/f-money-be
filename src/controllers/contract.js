@@ -2,7 +2,7 @@ import Contract from "../models/contract";
 import User from "../models/users";
 import mongoose from "mongoose";
 const excel = require('node-excel-export');
-
+const cron = require('node-cron');
 
 export const getContracts = async (req, res) => {
   const user_id = req.query.id;
@@ -90,14 +90,14 @@ export const createContracts = async (req, res) => {
       let his = {
         "ngay": time + (a * 24 * 60 * 60 * 1000),
         "tien": dong_1 * parseInt(han_tra),
-        "trang_thai": 0
+        "trang_thai": false
       }
       arrDong.push(his);
     }
     let his = {
       "ngay": time + (du * 24 * 60 * 60 * 1000),
       "tien": dong_1,
-      "trang_thai": 0
+      "trang_thai": false
     }
     arrDong.push(his)
   }
@@ -123,13 +123,13 @@ export const createContracts = async (req, res) => {
   }
 }
 export const updateContract = async (req, res, next) => {
-  const {id} = req.params
-  const {date, status } = req.body;
+  const { id } = req.params
+  const { date, status } = req.body;
   try {
     const contract = await Contract.findOne({ "_id": id }).exec();
     if (contract) {
       let newArrTT = [];
-      let thanh_toan =0;
+      let thanh_toan = 0;
       let stt = 0;
       for (let i = 0; i < contract.han_thanh_toan.length; i++) {
         let childrenCt = contract.han_thanh_toan[i];
@@ -144,10 +144,10 @@ export const updateContract = async (req, res, next) => {
           }
         }
       }
-      if(contract.tong_hd == thanh_toan){
+      if (contract.tong_hd == thanh_toan) {
         stt = 2
       }
-      const newContract = await Contract.updateOne({"_id": id},{"han_thanh_toan" : newArrTT,"da_thanh_toan" :thanh_toan,"status": stt});
+      const newContract = await Contract.updateOne({ "_id": id }, { "han_thanh_toan": newArrTT, "da_thanh_toan": thanh_toan, "status": stt });
       res.status(200).json(newContract);
     } else {
       res.status(400).json("Hợp đồng không tồn tại hoặc đã bị xoá!");
@@ -392,5 +392,19 @@ export const contractsExcel = async (req, res, next) => {
   } else {
     res.status(400).json({ "message": `Dữ liệu không đúng` });
     return;
+  }
+}
+
+export const autoUpdateContract = async (date) => {
+  console.log("Date",date);
+  const contracts = await Contract.find({}).exec();
+  for (let i = 0; i < contracts.length; i++) {
+    const element = contracts[i];
+    for (let j = 0; j < element.han_thanh_toan; j++) {
+      const itemData = element.han_thanh_toan[j]
+      if (itemData.ngay + (24 * 60 * 60 * 1000) < date && itemData.trang_thai == false) {
+        const newContract = await Contract.updateOne({ "_id": element._id }, { "status": 1 }).exec();
+      }
+    }
   }
 }
