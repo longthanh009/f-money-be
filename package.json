@@ -32,6 +32,7 @@
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
     "path": "^0.12.7",
+    "slugify": "^1.6.5",
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0"
   }

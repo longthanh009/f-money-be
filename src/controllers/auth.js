@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import Users from '../models/users'
-const JWT = '8hEnPGeoBqGUT6zksxt4G95gW+uMdzwe7EVaRnp0xRI='
 
 // Đăng ký
 export const Registration = async (req, res, next) => {
@@ -117,11 +116,12 @@ export const login = async (req, res) => {
       {
         id: user._id,
         username: user.username,
+        email: user.email,
         role: user.role,
       },
       "sontv", { expiresIn: "7d" }, { algorithm: 'HS256' }
     )
-    const refreshToken = jwt.sign({id: user._id,username: user.username, role: user.role,},"sontv", { expiresIn: "365d" }, { algorithm: 'HS256' }
+    const refreshToken = jwt.sign({id: user._id,username: user.username,email: user.email, role: user.role,},"sontv", { expiresIn: "365d" }, { algorithm: 'HS256' }
     )
     return res.json({
       status: 'Login Success', data: {
@@ -132,6 +132,9 @@ export const login = async (req, res) => {
         token,
         refreshToken,
         role: user.role,
+        address: user.address,
+        phone: user.phone,
+        activate :user ? user.activate :null
       }
     })
   }
@@ -160,12 +163,9 @@ export const usersChangePassword = async (req, res) => {
     })
   }
   try {
-    const user = jwt.verify(token, JWT)
-
+    const user = jwt.verify(token, "sontv")
     const _id = user.id
-
     const password = await bcrypt.plainTextPassword
-
     await userCustomer.updateOne(
       { _id },
       {
@@ -174,7 +174,6 @@ export const usersChangePassword = async (req, res) => {
     )
     res.json({ status: 'ok' })
   } catch (error) {
-    console.log(error)
     res.json({ status: 'error', error: ';))' })
   }
 }
