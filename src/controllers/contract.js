@@ -2,7 +2,6 @@ import Contract from "../models/contract";
 import User from "../models/users";
 import mongoose from "mongoose";
 const excel = require('node-excel-export');
-const cron = require('node-cron');
 
 export const getContracts = async (req, res) => {
   const user_id = req.user.id;
@@ -346,7 +345,7 @@ export const contractsExcel = async (req, res, next) => {
     { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
     { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
   ]
-  const { id } = req.query;
+  const id = req.user.id;;
   if (id) {
     try {
       const userExits = await User.findOne({ "_id": id }).exec();
@@ -396,7 +395,6 @@ export const contractsExcel = async (req, res, next) => {
 }
 
 export const autoUpdateContract = async (date) => {
-  console.log("Date",date);
   const contracts = await Contract.find({}).exec();
   for (let i = 0; i < contracts.length; i++) {
     const element = contracts[i];
