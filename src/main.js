@@ -16,6 +16,7 @@ import routerMenuLoan from "./routes/menuLoan";
 import routerSupport from "./routes/supportCs";
 import path from "path";
 import routerService from "./routes/servicePack";
+import routerBlog from "./routes/blog";
 import {autoUpdateContract} from "./controllers/contract";
 import {autoUpdateContractMg} from "./controllers/mortgageContract";
 
@@ -76,6 +77,7 @@ app.use("/api", routerService);
 app.use("/api", routerMenuLoan);
 app.use("/api", routerSupport);
 app.use("/api", routerContractMortgage);
+app.use("/api", routerBlog);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 // app.use("/api/users", routeUsers);
 
