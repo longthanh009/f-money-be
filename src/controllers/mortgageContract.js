@@ -30,7 +30,7 @@ export const create = async (req, res) => {
     }
 }
 export const getContractMortgages = async (req, res) => {
-    const user_id = req.query.id;
+    const user_id = req.user.id;
     const formDate = req.query.formdate;
     const toDate = req.query.todate;
     if (user_id) {
