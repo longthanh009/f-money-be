@@ -22,6 +22,7 @@
     "express-fileupload": "^1.4.0",
     "express-unless": "^2.1.2",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.4",
     "mongoose": "^6.6.1",
     "mongoose-unique-validator": "^3.1.0",
     "morgan": "^1.10.0",
@@ -31,6 +32,7 @@
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
     "path": "^0.12.7",
+    "slugify": "^1.6.5",
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0"
   }

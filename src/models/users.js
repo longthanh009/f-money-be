@@ -18,15 +18,17 @@ const Users = new mongoose.Schema({
         required: [true, 'Please provide password'],
         minlength: 6,
     },
-    phone: { type: Number },
+    phone: { type: String },
     email: { type: String },
     address: { type: String },
     activate: {
         isActive: {
-            type : Number
+            type : Number,
+            default: 0
         },
         end_date : {
-            type : Number
+            type : Number,
+            default: 0
         }
     },
     status:{
