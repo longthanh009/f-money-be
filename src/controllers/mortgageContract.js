@@ -15,7 +15,7 @@ export const create = async (req, res) => {
     let han_vay = req.body.han_vay ? req.body.han_vay : "";
     let thong_tin = req.body.thong_tin ? req.body.thong_tin : "";
     let ghi_chu = req.body.ghi_chu ? req.body.ghi_chu : "";
-    let nguoi_tao_hd = req.body.nguoi_tao_hd ? req.body.nguoi_tao_hd : "";
+    const nguoi_tao_hd = req.user.id;
     if (ten_khach_hang == "" || cccd == "" || dien_thoai == "" || dia_chi == "" || khoan_vay == "" || phi_dv == "" || han_vay == "" || thong_tin == "" || nguoi_tao_hd == "") {
         return res.status(200).json({ 'error': "Dữ liệu không đúng yêu cầu !!" });
     } else {
@@ -30,7 +30,7 @@ export const create = async (req, res) => {
     }
 }
 export const getContractMortgages = async (req, res) => {
-    const user_id = req.query.id;
+    const user_id = req.user.id;
     const formDate = req.query.formdate;
     const toDate = req.query.todate;
     if (user_id) {
@@ -226,7 +226,7 @@ export const contractsMgExcel = async (req, res, next) => {
         { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
         { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
     ]
-    const { id } = req.query;
+    const id  = req.user.id;
     if (id) {
         try {
             const userExits = await User.findOne({ "_id": id }).exec();
