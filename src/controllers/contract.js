@@ -55,7 +55,8 @@ export const getContracts = async (req, res) => {
 }
 export const createContracts = async (req, res) => {
   const { ma_hd, ten_khach_hang, cccd, dien_thoai, dia_chi, khoan_vay, lai_xuat } = req.body;
-  const { han_vay, han_tra, ghi_chu, nguoi_tao_hd } = req.body;
+  const { han_vay, han_tra, ghi_chu } = req.body;
+  const nguoi_tao_hd = req.user.id
   let date = new Date();
   let time = date.getTime();
   let objData = {};

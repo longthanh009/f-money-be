@@ -15,7 +15,7 @@ export const create = async (req, res) => {
     let han_vay = req.body.han_vay ? req.body.han_vay : "";
     let thong_tin = req.body.thong_tin ? req.body.thong_tin : "";
     let ghi_chu = req.body.ghi_chu ? req.body.ghi_chu : "";
-    let nguoi_tao_hd = req.body.nguoi_tao_hd ? req.body.nguoi_tao_hd : "";
+    const nguoi_tao_hd = req.user.id;
     if (ten_khach_hang == "" || cccd == "" || dien_thoai == "" || dia_chi == "" || khoan_vay == "" || phi_dv == "" || han_vay == "" || thong_tin == "" || nguoi_tao_hd == "") {
         return res.status(200).json({ 'error': "Dữ liệu không đúng yêu cầu !!" });
     } else {
