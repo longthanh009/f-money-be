@@ -413,3 +413,12 @@ export const autoUpdateContract = async (date) => {
     }
   }
 }
+export const getContractHis = async (req, res) => {
+  const code = req.user.code;
+  try {
+    const contracts = await Contract.find({"ma_khach_hang" : code}).exec();
+    res.status(200).json(contracts);
+  } catch (err) {
+    res.status(400).json("không tìm thấy Contract")
+  }
+}

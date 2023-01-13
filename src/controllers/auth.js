@@ -136,7 +136,8 @@ export const login = async (req, res) => {
         role: user.role,
         address: user.address,
         phone: user.phone,
-        activate: user ? user.activate : null
+        activate: user ? user.activate : null,
+        code : user.code
       }
     })
   }
