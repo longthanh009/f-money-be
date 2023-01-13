@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import Users from '../models/users'
+import nodemailer from "nodemailer";
 
 // Đăng ký
 export const Registration = async (req, res, next) => {
@@ -121,7 +122,7 @@ export const login = async (req, res) => {
       },
       "sontv", { expiresIn: "7d" }, { algorithm: 'HS256' }
     )
-    const refreshToken = jwt.sign({id: user._id,username: user.username,email: user.email, role: user.role,},"sontv", { expiresIn: "365d" }, { algorithm: 'HS256' }
+    const refreshToken = jwt.sign({ id: user._id, username: user.username, email: user.email, role: user.role, }, "sontv", { expiresIn: "365d" }, { algorithm: 'HS256' }
     )
     return res.json({
       status: 'Login Success', data: {
@@ -134,7 +135,7 @@ export const login = async (req, res) => {
         role: user.role,
         address: user.address,
         phone: user.phone,
-        activate :user ? user.activate :null
+        activate: user ? user.activate : null
       }
     })
   }
@@ -175,5 +176,65 @@ export const usersChangePassword = async (req, res) => {
     res.json({ status: 'ok' })
   } catch (error) {
     res.json({ status: 'error', error: ';))' })
+  }
+}
+var transporter = nodemailer.createTransport({ // config mail server
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'longktph14503@fpt.edu.vn',
+    pass: 'long30092002'
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+});
+export const forgotPassword = async (req, res) => {
+  const { username, email } = req.body;
+  var content = '';
+  var randomstring = Math.random().toString(36).slice(-8);
+ 
+  try {
+    const user = await Users.findOne({ "username": username }).exec();
+    if (!user || user.email != email) {
+      res.status(400).json({ error: 'Thông tin không chính xác !' })
+      return;
+    }
+    content += `
+    <div style="padding: 10px; background-color: #003375">
+        <div style="padding: 10px; background-color: white;">
+            <h4 style="color: #0085ff">Xin chào ${user.name}.</h4>
+            <span style="color: black">Chúng tôi nhận được thông tin bạn cần cấp lại mật khẩu đăng nhập.Mật khẩu của bạn là <b> ${randomstring}</b>.Vui lòng đăng nhập và đổi lại mật khẩu</span>
+            <br>
+            <span> Trân trọng !</span>
+        </div>
+    </div>
+`;
+    const salt = bcrypt.genSaltSync(10)
+    const hash = bcrypt.hashSync(randomstring, salt);
+    await Users.updateOne(
+      { "_id": user._id },
+      {
+        $set: { "password": hash },
+      },
+    )
+    var mainOptions = {
+      from: 'longktph14503@fpt.edu.vn',
+      to: email,
+      subject: 'Cấp lại mật khẩu F_Money',
+      text: '',//Thường thi mình không dùng cái này thay vào đó mình sử dụng html để dễ edit hơn
+      html: content //Nội dung html mình đã tạo trên kia :))
+    }
+    transporter.sendMail(mainOptions, function (err, info) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    })
+    res.json({ status: 'ok' })
+  } catch (error) {
+    res.json({ status: 'error', error: error })
   }
 }
