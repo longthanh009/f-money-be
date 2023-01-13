@@ -59,7 +59,7 @@ export const getContracts = async (req, res) => {
 }
 export const createContracts = async (req, res) => {
   const { ma_hd, ten_khach_hang, cccd, dien_thoai, dia_chi, khoan_vay, lai_xuat } = req.body;
-  const { han_vay, han_tra, ghi_chu } = req.body;
+  const { han_vay, han_tra, ghi_chu, ma_khach_hang } = req.body;
   const nguoi_tao_hd = req.user.id
   let date = new Date();
   let time = date.getTime();
@@ -74,7 +74,8 @@ export const createContracts = async (req, res) => {
   }
   let cout = han_vay / han_tra; // số lần trả
   let arrDong = [];
-  let dong_1 = (khoan_vay + (khoan_vay * ti_le)) / han_vay; //tiền đóng mỗi ngày
+  let loi = khoan_vay * ti_le / 365
+  let dong_1 = (khoan_vay + (loi * han_vay)) / han_vay; //tiền đóng mỗi ngày
   if (han_vay % han_tra == 0) {
     let a = 0
     for (let i = 0; i < parseInt(cout); i++) {
@@ -107,6 +108,7 @@ export const createContracts = async (req, res) => {
   }
   objData.ma_hd = ma_hd;
   objData.ten_khach_hang = ten_khach_hang;
+  objData.ma_khach_hang = ma_khach_hang;
   objData.cccd = cccd;
   objData.dien_thoai = dien_thoai;
   objData.khoan_vay = khoan_vay;
@@ -116,7 +118,7 @@ export const createContracts = async (req, res) => {
   objData.nguoi_tao_hd = nguoi_tao_hd;
   objData.dia_chi = dia_chi;
   objData.ghi_chu = ghi_chu;
-  objData.tong_hd = khoan_vay + (khoan_vay * ti_le);
+  objData.tong_hd = khoan_vay + loi;
   objData.han_thanh_toan = arrDong;
   objData.han_hd = time + (han_vay * 24 * 60 * 60 * 1000);
   try {
