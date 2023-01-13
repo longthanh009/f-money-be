@@ -31,6 +31,10 @@ const Users = new mongoose.Schema({
             default: 0
         }
     },
+    isDelete :{
+        type : Boolean,
+        default : false
+    },
     status:{
         type: Boolean,
         default: false

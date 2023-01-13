@@ -11,22 +11,14 @@ export const updateUser = async(req, res, next) => {
         next(err);
     }
 }
-export const deleteUser = async(req, res, next) => {
+export const deleteUser = async(req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
+        const user = await User.findByIdAndUpdate(req.params.id,{"isDelete" : true}).exec();
         res.status(200).json(user);
     } catch (err) {
-        next(err);
+        res.status(200).json({"error": "Không xoá được user"});
     }
 }
-// export const deleteUsers = async(req, res, next) => {
-//     try {
-//         const user = await User.deleteMany(req.body);
-//         res.status(200).json(user);
-//     } catch (err) {
-//         next(err);
-//     }
-// }
 export const getUser = async(req, res, next) => {
     try {
         const user = await User.findById({ _id: req.params.id }).exec();
@@ -50,7 +42,7 @@ export const getUsers = async(req, res, next) => {
     if (!limit) limit = 10;
 
     const skip = (page - 1) * 10;
-    const users = await User.find()
+    const users = await User.find({"isDelete" : false})
         .sort({
             [sort]: asc
         })
@@ -75,7 +67,6 @@ export const searchUsers = async(req, resp) => {
 export const deleteManyUser = async(req, res) => {
     try {
         const response = await User.deleteMany({_id:  req.query.id})
-        console.log(response)
         res.status(200).json({
             data: response,
             status: 'OK'
