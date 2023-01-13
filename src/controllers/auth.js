@@ -55,15 +55,16 @@ export const Registration = async (req, res, next) => {
   // }
   // res.json({ status: "ok" });
   try {
+    const users = await Users.find().exec();
     const exitsUser = await Users.findOne({ username }).exec()
     const exitsPhone = await Users.findOne({ phone }).exec()
     const exitsEmail = await Users.findOne({ email }).exec()
-
     if (exitsEmail) {
       return res.status(400).json({
         message: "Email đã tồn tại"
       })
     }
+    let code = "KH000"+ users.length
     if (exitsUser) {
       return res.status(400).json({
         message: "Tên đăng nhập đã tồn tại"
@@ -82,10 +83,10 @@ export const Registration = async (req, res, next) => {
     }
     const salt = bcrypt.genSaltSync(10)
     const hash = bcrypt.hashSync(req.body.password, salt)
-
-    const newUser = await new Users({ ...req.body, password: hash, }).save()
+    const newUser = await new Users({ ...req.body, password: hash, "code" : code}).save()
     res.status(200).json({
       newUser: {
+        code : code,
         name: newUser.name,
         password: newUser.password,
         username: newUser.username,
@@ -194,7 +195,6 @@ export const forgotPassword = async (req, res) => {
   const { username, email } = req.body;
   var content = '';
   var randomstring = Math.random().toString(36).slice(-8);
- 
   try {
     const user = await Users.findOne({ "username": username }).exec();
     if (!user || user.email != email) {

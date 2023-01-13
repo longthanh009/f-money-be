@@ -22,10 +22,14 @@ export const getContracts = async (req, res) => {
           return res.status(400).json({ "message": "Dữ liệu không đúng" });
         } else {
           if (userExits.role == 2) {
-            const data = await Contract.find({}).exec()
+            const data = await Contract.find({}).exec().sort({
+              [sort]: asc
+            })
             return res.status(200).json(data);
           } else {
-            const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).exec()
+            const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).exec().sort({
+              [sort]: asc
+            })
             return res.status(200).json(data);
           }
         }
