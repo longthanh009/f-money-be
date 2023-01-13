@@ -12,6 +12,9 @@ const ContractMortgageContractSc = new mongoose.Schema(
             type: String,
             require: true,
         },
+        ma_khach_hang: {
+            type: String,
+        },
         // thẻ căn cước công dân
         cccd: {
             type: Number,
@@ -67,6 +70,9 @@ const ContractMortgageContractSc = new mongoose.Schema(
         // ngày kết thúc vay tiền
         han_hd: {
             type: Number,
+        },
+        hinh_anh : {
+            type: Array,
         },
         // trạng thái hợp đồng
         status: {
