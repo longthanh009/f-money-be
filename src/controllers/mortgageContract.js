@@ -226,7 +226,7 @@ export const contractsMgExcel = async (req, res, next) => {
         { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
         { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
     ]
-    const id  = req.user.id;
+    const id = req.user.id;
     if (id) {
         try {
             const userExits = await User.findOne({ "_id": id }).exec();
@@ -282,5 +282,80 @@ export const autoUpdateContractMg = async (date) => {
         if (itemData.han_hd + (24 * 60 * 60 * 1000) < date && itemData.trang_thai == false) {
             const newContract = await ContractMortgage.updateOne({ "_id": element._id }, { "status": 1 }).exec();
         }
+    }
+}
+export const turnoverContractMonth = async (req, res) => {
+    const year = Number(req.query.year)
+    const user_id = req.user.id;
+    const userExits = await User.findOne({ "_id": user_id }).exec();
+    try {
+        let datas = []
+        let count = 0;
+        let tong_cho_vay = 0
+        let tong_tien_lai = 0
+        if (userExits.role == 2) {
+            for (let i = 1; i < 13; i++) {
+                let objData = {};
+                const contracts = await ContractMortgage.aggregate([{
+                    $match:
+                    {
+                        $and: [
+                            { $expr: { $eq: [{ $month: "$createdAt" }, i] } },
+                            { $expr: { $eq: [{ $year: "$createdAt" }, year] } },
+                        ]
+                    }
+                }])
+                let turnoverPriceMonth = 0
+                let turnoverPriceRipMonth = 0
+                count += contracts.length;
+                objData.so_luong_hd = contracts.length
+                for (let i = 0; i < contracts.length; i++) {
+                    const contract = contracts[i];
+                    turnoverPriceMonth += contract.khoan_vay
+                    turnoverPriceRipMonth += contract.tong_hd
+                }
+                tong_cho_vay += turnoverPriceMonth;
+                tong_tien_lai += turnoverPriceRipMonth
+                objData.tien_cho_vay = turnoverPriceMonth;
+                objData.tien_lai = turnoverPriceRipMonth;
+                datas.push(objData)
+            }
+        } else {
+            for (let i = 1; i < 13; i++) {
+                let objData = {};
+                const contracts = await Contract.aggregate([{
+                    $match:
+                    {
+                        $and: [
+                            { $expr: { $eq: [{ $month: "$createdAt" }, i] } },
+                            { $expr: { $eq: [{ $year: "$createdAt" }, year] } },
+                            { "nguoi_tao_hd": user_id }
+                        ]
+                    }
+                }])
+                let turnoverPriceMonth = 0
+                let turnoverPriceRipMonth = 0
+                count += contracts.length;
+                objData.so_luong_hd = contracts.length
+                for (let i = 0; i < contracts.length; i++) {
+                    const contract = contracts[i];
+                    turnoverPriceMonth += contract.khoan_vay
+                    turnoverPriceRipMonth += contract.tong_hd
+                }
+                tong_cho_vay += turnoverPriceMonth;
+                tong_tien_lai += turnoverPriceRipMonth
+                objData.tien_cho_vay = turnoverPriceMonth;
+                objData.tien_lai = turnoverPriceRipMonth;
+                datas.push(objData)
+            }
+        }
+        return res.json({
+            tong_sl: count,
+            tong_cho_vay: tong_cho_vay,
+            tong_tien_lai: tong_tien_lai,
+            data: datas
+        })
+    } catch (error) {
+        return res.status(400).json(error.message)
     }
 }

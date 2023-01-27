@@ -1,5 +1,5 @@
 import express from "express";
-import { getContracts, createContracts, updateContract, deleteContract, getContract, deleteManyContract, checkCCCD, contractsExcel, getContractHis } from "../controllers/contract";
+import { getContracts, createContracts, updateContract, deleteContract, getContract, deleteManyContract, checkCCCD, contractsExcel, getContractHis ,contractsStatistic,turnoverContractMonth} from "../controllers/contract";
 import { isLender } from "../middlewares/auth";
 import { upload } from "../middlewares/fileUpload";
 import { jwtVerifyToken } from "../middlewares/verifyToken";
@@ -12,6 +12,7 @@ router.get("/contract/:id", getContract);
 router.get("/contracts", jwtVerifyToken, getContracts);
 router.get("/user-contracts", jwtVerifyToken, getContractHis);
 router.post("/contracts", jwtVerifyToken, createContracts)
+router.get("/contracts-static", jwtVerifyToken, turnoverContractMonth)
 router.get("/checkUser", checkCCCD)
 router.get("/contractExcel", jwtVerifyToken, contractsExcel)
 export default router;
