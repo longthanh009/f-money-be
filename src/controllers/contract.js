@@ -17,7 +17,7 @@ export const getContracts = async (req, res) => {
         objfind = { $gte: new Date(parseInt(formDate)), $lt: new Date(parseInt(end)) }
       }
       try {
-        const userExits = await User.findOne({ "_id": user_id }).exec()
+        const userExits = await User.findOne({ "_id": user_id }).exec();
         if (!userExits) {
           return res.status(400).json({ "message": "Dữ liệu không đúng" });
         } else {
@@ -416,9 +416,159 @@ export const autoUpdateContract = async (date) => {
 export const getContractHis = async (req, res) => {
   const code = req.user.code;
   try {
-    const contracts = await Contract.find({"ma_khach_hang" : code}).exec();
+    const contracts = await Contract.find({ "ma_khach_hang": code }).exec();
     res.status(200).json(contracts);
   } catch (err) {
     res.status(400).json("không tìm thấy Contract")
+  }
+}
+export const contractsStatistic = async (req, res) => {
+  const month = Number(req.query.month)
+  const year = Number(req.query.year)
+  const user_id = req.user.id;
+  const userExits = await User.findOne({ "_id": user_id }).exec();
+  try {
+    if (!month && !year) {
+      if (!userExits) {
+        return res.status(400).json({ "message": "Dữ liệu không đúng" });
+      } else {
+        if (userExits.role == 2) {
+          const data = await Contract.find({}).exec()
+          return res.status(200).json(data);
+        } else {
+          const data = await Contract.find({ "nguoi_tao_hd": user_id }).exec()
+          return res.status(200).json(data);
+        }
+      }
+    } else if (month && year) {
+      if (userExits.role == 2) {
+        const data = await Contract.aggregate([{
+          $match:
+          {
+            $and: [
+              { $expr: { $eq: [{ $month: "$createdAt" }, month] } },
+              { $expr: { $eq: [{ $year: "$createdAt" }, year] } }
+            ]
+          }
+        }])
+        return res.json(data);
+      } else {
+        const data = await Contract.aggregate([{
+          $match:
+          {
+            $and: [
+              { $expr: { $eq: [{ $month: "$createdAt" }, month] } },
+              { $expr: { $eq: [{ $year: "$createdAt" }, year] } },
+              { "nguoi_tao_hd": user_id }
+            ]
+          }
+        }])
+        return res.json(data);
+      }
+    }
+    else if (!month && year) {
+      if (userExits.role == 2) {
+        const data = await Contract.aggregate([{
+          $match:
+          {
+            $and: [
+              { $expr: { $eq: [{ $year: "$createdAt" }, year] } },
+            ]
+          }
+        }
+        ])
+        return res.status(200).json(data);
+      } else {
+        const data = await Contract.aggregate([{
+          $match:
+          {
+            $and: [
+              { $expr: { $eq: [{ $year: "$createdAt" }, year] } },
+              { "nguoi_tao_hd": user_id }
+            ]
+          }
+        }
+        ])
+        return res.status(200).json(data);
+      }
+    }
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
+};
+
+export const turnoverContractMonth = async (req, res) => {
+  const year = Number(req.query.year)
+  const user_id = req.user.id;
+  const userExits = await User.findOne({ "_id": user_id }).exec();
+  try {
+    let datas = []
+    let count = 0;
+    let tong_cho_vay = 0
+    let tong_tien_lai = 0
+    if (userExits.role == 2) {
+      for (let i = 1; i < 13; i++) {
+        let objData = {};
+        const contracts = await Contract.aggregate([{
+          $match:
+          {
+            $and: [
+              { $expr: { $eq: [{ $month: "$createdAt" }, i] } },
+              { $expr: { $eq: [{ $year: "$createdAt" }, year] } },
+            ]
+          }
+        }])
+        let turnoverPriceMonth = 0
+        let turnoverPriceRipMonth = 0
+        count += contracts.length;
+        objData.so_luong_hd = contracts.length
+        for (let i = 0; i < contracts.length; i++) {
+          const contract = contracts[i];
+          turnoverPriceMonth += contract.khoan_vay
+          turnoverPriceRipMonth += contract.tong_hd
+        }
+        tong_cho_vay += turnoverPriceMonth;
+        tong_tien_lai += turnoverPriceRipMonth
+        objData.tien_cho_vay = turnoverPriceMonth;
+        objData.tien_lai = turnoverPriceRipMonth;
+        datas.push(objData)
+      }
+    } else {
+      for (let i = 1; i < 13; i++) {
+        let objData = {};
+        const contracts = await Contract.aggregate([{
+          $match:
+          {
+            $and: [
+              { $expr: { $eq: [{ $month: "$createdAt" }, i] } },
+              { $expr: { $eq: [{ $year: "$createdAt" }, year] } },
+              { "nguoi_tao_hd": user_id }
+            ]
+          }
+        }])
+        let turnoverPriceMonth = 0
+        let turnoverPriceRipMonth = 0
+        count += contracts.length;
+        objData.so_luong_hd = contracts.length
+        for (let i = 0; i < contracts.length; i++) {
+          const contract = contracts[i];
+          turnoverPriceMonth += contract.khoan_vay
+          turnoverPriceRipMonth += contract.tong_hd
+        }
+        tong_cho_vay += turnoverPriceMonth;
+        tong_tien_lai += turnoverPriceRipMonth
+        objData.tien_cho_vay = turnoverPriceMonth;
+        objData.tien_lai = turnoverPriceRipMonth;
+        datas.push(objData)
+      }
+    }
+    return res.json({
+      tong_sl: count,
+      tong_cho_vay : tong_cho_vay,
+      tong_tien_lai : tong_tien_lai, 
+      data: datas
+    })
+  } catch (error) {
+    return res.status(400).json(error.message)
   }
 }
