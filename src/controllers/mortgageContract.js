@@ -1,7 +1,6 @@
 import ContractMortgage from "../models/mortgageContract";
 import User from "../models/users";
 const excel = require('node-excel-export');
-
 export const create = async (req, res) => {
     let tong_hd;
     let ngaykt;

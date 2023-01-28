@@ -55,9 +55,9 @@ export const createSp = async (req, res) => {
     }
 }
 export const getSupportCs = async (req, res) => {
-    const { id } = req.query;
-    if (id) {
-        const userExits = await User.findOne({ "_id": id }).exec();
+    const user_id = req.user.id
+    if (user_id) {
+        const userExits = await User.findOne({ "_id": user_id }).exec();
         console.log(userExits);
         if (!userExits) {
             return res.status(200).json({ "error": "Dữ liệu không đúng" });
