@@ -138,7 +138,7 @@ export const login = async (req, res) => {
         address: user.address,
         phone: user.phone,
         activate: user ? user.activate : null,
-        code : user.code
+        code : user.code ?user.code : ""
       }
     })
   }

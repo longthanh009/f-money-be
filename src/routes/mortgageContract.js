@@ -3,11 +3,11 @@ import { create, getContractMortgages, getContractMortgage, deleteManyMortgage, 
 import { jwtVerifyToken } from "../middlewares/verifyToken";
 const router = express.Router();
 
-router.post("/contractMortgage",create);
+router.post("/contractMortgage",jwtVerifyToken,create);
 router.get("/contractMortgage",jwtVerifyToken,getContractMortgages);
-router.get("/contractMortgage/:id",getContractMortgage);
-router.get("/contractMortgageExcel",contractsMgExcel);
+router.get("/contractMortgage/:id",jwtVerifyToken,getContractMortgage);
+router.get("/contractMortgageExcel",jwtVerifyToken,contractsMgExcel);
 router.get("/contractMortgage-static", jwtVerifyToken, turnoverContractMonth)
-router.delete("/contractMortgage/", deleteManyMortgage);
-router.delete("/contractMortgage/:id", deleteContractMortgage);
+router.delete("/contractMortgage/",jwtVerifyToken, deleteManyMortgage);
+router.delete("/contractMortgage/:id",jwtVerifyToken, deleteContractMortgage);
 export default router;
