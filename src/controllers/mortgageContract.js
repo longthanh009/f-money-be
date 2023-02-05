@@ -90,6 +90,15 @@ export const getContractMortgage = async (req, res) => {
         res.status(400).json("Không tìm thấy dữ liệu")
     }
 }
+export const updateContractMortgage = async (req, res) => {
+    console.log(req.params.id);
+    try {
+        const sp = await ContractMortgage.findOneAndUpdate({ _id: req.params.id },{status : 2}).exec()
+        return res.json(sp)
+    } catch (error) {
+        return res.json(error.message)
+    }
+}
 
 export const deleteContractMortgage = async (req, res) => {
     try {
