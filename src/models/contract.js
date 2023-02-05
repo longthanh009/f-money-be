@@ -79,7 +79,10 @@ const Contract = new mongoose.Schema(
     hinh_anh :{
       type: Array,
     },
-    // trạng thái hợp đồng
+    ngay_vay : {
+      type : Number,
+      require: true,
+    },
     status: {
       type: Number,
       default: 0,
