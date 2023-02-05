@@ -42,9 +42,7 @@ export const getUsers = async(req, res, next) => {
     if (!limit) limit = 10;
     const skip = (page - 1) * 10;
     const users = await User.find({"isDelete" : false})
-        .sort({
-            [sort]: asc
-        })
+    .sort({createdAt: -1})
         .skip(skip)
         .limit(limit);
     res.send({ page: page, limit: limit, users: users });
