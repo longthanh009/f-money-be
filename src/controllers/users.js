@@ -40,7 +40,6 @@ export const getUsers = async(req, res, next) => {
     let { page, limit, sort, asc } = req.query;
     if (!page) page = 1;
     if (!limit) limit = 10;
-
     const skip = (page - 1) * 10;
     const users = await User.find({"isDelete" : false})
         .sort({
