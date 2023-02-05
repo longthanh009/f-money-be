@@ -55,10 +55,9 @@ export const getContracts = async (req, res) => {
 }
 export const createContracts = async (req, res) => {
   const { ma_hd, ten_khach_hang, cccd, dien_thoai, dia_chi, khoan_vay, lai_xuat } = req.body;
-  const { han_vay, han_tra, ghi_chu, ma_khach_hang } = req.body;
+  const { han_vay, han_tra, ghi_chu, ma_khach_hang ,ngay_vay} = req.body;
   const nguoi_tao_hd = req.user.id
-  let date = new Date();
-  let time = date.getTime();
+  const time = req.body.ngay_vay;
   let objData = {};
   let ti_le = lai_xuat / 100;
   if (ten_khach_hang == "" || cccd == "" || dien_thoai == "" || khoan_vay == "" || lai_xuat == "") {
@@ -99,6 +98,7 @@ export const createContracts = async (req, res) => {
     }
     arrDong.push(his)
   }
+  objData.ngay_vay = ngay_vay
   objData.ma_hd = ma_hd;
   objData.ten_khach_hang = ten_khach_hang;
   objData.ma_khach_hang = ma_khach_hang;

@@ -6,6 +6,7 @@ export const create = async (req, res) => {
     let ngaykt;
     let ma_hd = req.body.ma_hd ? req.body.ma_hd : "";
     let ten_khach_hang = req.body.ten_khach_hang ? req.body.ten_khach_hang : "";
+    let ma_khach_hang = req.body.ma_khach_hang ? req.body.ma_khach_hang : "";
     let cccd = req.body.cccd ? req.body.cccd : "";
     let dien_thoai = req.body.dien_thoai ? req.body.dien_thoai : "";
     let dia_chi = req.body.dia_chi ? req.body.dia_chi : "";
@@ -14,6 +15,7 @@ export const create = async (req, res) => {
     let han_vay = req.body.han_vay ? req.body.han_vay : "";
     let thong_tin = req.body.thong_tin ? req.body.thong_tin : "";
     let ghi_chu = req.body.ghi_chu ? req.body.ghi_chu : "";
+    let ngay_vay = req.body.ngay_vay ? req.body.ngay_vay : "";
     const nguoi_tao_hd = req.user.id;
     if (ten_khach_hang == "" || cccd == "" || dien_thoai == "" || dia_chi == "" || khoan_vay == "" || phi_dv == "" || han_vay == "" || thong_tin == "" || nguoi_tao_hd == "") {
         return res.status(200).json({ 'error': "Dữ liệu không đúng yêu cầu !!" });
@@ -22,7 +24,7 @@ export const create = async (req, res) => {
         ngaykt = new Date().getTime() + (parseInt(han_vay) * 24 * 60 * 60 * 1000);
     }
     try {
-        const data = await ContractMortgage({ ma_hd, ten_khach_hang, cccd, dia_chi, dien_thoai, khoan_vay, phi_dv, han_vay, thong_tin, ghi_chu, nguoi_tao_hd, tong_hd, han_hd: ngaykt }).save();
+        const data = await ContractMortgage({ ma_hd,ma_khach_hang, ten_khach_hang, cccd, dia_chi, dien_thoai, khoan_vay, phi_dv, han_vay, thong_tin, ghi_chu, nguoi_tao_hd, tong_hd, han_hd: ngaykt,ngay_vay }).save();
         res.status(200).json(data);
     } catch (error) {
         res.status(500).json({ "error": "Lỗi không tạo được hợp đồng vay tín chấp" })

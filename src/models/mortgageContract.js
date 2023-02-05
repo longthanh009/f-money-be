@@ -48,7 +48,7 @@ const ContractMortgageContractSc = new mongoose.Schema(
         // ghi chú
         thong_tin: {
             type: String,
-            require:true
+            require: true
         },
         ghi_chu: {
             type: String,
@@ -67,14 +67,16 @@ const ContractMortgageContractSc = new mongoose.Schema(
             type: Number,
             require: true,
         },
-        // ngày kết thúc vay tiền
         han_hd: {
             type: Number,
         },
-        hinh_anh : {
+        hinh_anh: {
             type: Array,
         },
-        // trạng thái hợp đồng
+        ngay_vay: {
+            type: Number,
+            require: true,
+        },
         status: {
             type: Number,
             default: 0,
