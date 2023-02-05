@@ -70,26 +70,23 @@ export const createContracts = async (req, res) => {
   }
   let cout = han_vay / han_tra; // số lần trả
   let arrDong = [];
-  let loi = khoan_vay * ti_le / 365
-  let dong_1 = (khoan_vay + (loi * han_vay)) / han_vay; //tiền đóng mỗi ngày
+  let loi = khoan_vay * ti_le / 365 * parseInt(han_vay)
+  let dong_1 = (khoan_vay + loi) / han_vay; //tiền đóng mỗi ngày
   if (han_vay % han_tra == 0) {
-    let a = 0
-    for (let i = 0; i < parseInt(cout); i++) {
-      a += parseInt(cout)
+    for (let i = 1; i < parseInt(cout); i++) {
       let his = {
-        "ngay": time + (a * 24 * 60 * 60 * 1000),
+        "ngay": time + (i*parseInt(han_tra) * 24 * 60 * 60 * 1000),
         "tien": dong_1 * parseInt(han_tra),
         "trang_thai": false
       }
       arrDong.push(his);
     }
   } else {
-    let a = 0
     let du = han_vay / han_tra
-    for (let i = 0; i < parseInt(cout); i++) {
+    for (let i = 1; i < parseInt(cout); i++) {
       a += parseInt(cout)
       let his = {
-        "ngay": time + (a * 24 * 60 * 60 * 1000),
+        "ngay": time + (i*parseInt(han_tra) * 24 * 60 * 60 * 1000),
         "tien": dong_1 * parseInt(han_tra),
         "trang_thai": false
       }
