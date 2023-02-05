@@ -71,7 +71,7 @@ const ContractMortgageContractSc = new mongoose.Schema(
             type: Number,
         },
         hinh_anh: {
-            type: Array,
+            type: String,
         },
         ngay_vay: {
             type: Number,
