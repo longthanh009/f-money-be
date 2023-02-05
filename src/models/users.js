@@ -21,6 +21,15 @@ const Users = new mongoose.Schema({
     phone: { type: String },
     email: { type: String },
     address: { type: String },
+    CCCD: { 
+        type: String 
+    },
+    imagePrev: {
+        type: String,
+      },
+    imageBack: {
+        type: String,
+      },
     activate: {
         isActive: {
             type : Number,

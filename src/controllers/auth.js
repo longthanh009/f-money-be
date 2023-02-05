@@ -92,6 +92,9 @@ export const Registration = async (req, res, next) => {
         username: newUser.username,
         phone: newUser.phone,
         email: newUser.email,
+        CCCD: newUser.CCCD,
+        imagePrev: newUser.imagePrev,
+        imageBack:newUser.imageBack,
       },
     })
   } catch (error) {
