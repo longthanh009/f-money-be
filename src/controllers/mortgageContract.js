@@ -195,7 +195,7 @@ export const contractsMgExcel = async (req, res, next) => {
         thong_tin: {
             displayName: 'Thông tin tài sản',
             headerStyle: styles.headerDark,
-            width: 100
+            width: 450
         },
         status: {
             displayName: 'Trạng thái',
@@ -225,7 +225,7 @@ export const contractsMgExcel = async (req, res, next) => {
         { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
         { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
     ]
-    const id = req.user.id;
+    const id = req.query.id;
     if (id) {
         try {
             const userExits = await User.findOne({ "_id": id }).exec();

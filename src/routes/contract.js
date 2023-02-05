@@ -14,5 +14,5 @@ router.get("/user-contracts", jwtVerifyToken, getContractHis);
 router.post("/contracts", jwtVerifyToken, createContracts)
 router.get("/contracts-static", jwtVerifyToken, turnoverContractMonth)
 router.get("/checkUser", checkCCCD)
-router.get("/contractExcel", jwtVerifyToken, contractsExcel)
+router.get("/contractExcel", contractsExcel)
 export default router;
