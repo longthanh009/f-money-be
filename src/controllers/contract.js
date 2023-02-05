@@ -22,10 +22,10 @@ export const getContracts = async (req, res) => {
           return res.status(400).json({ "message": "Dữ liệu không đúng" });
         } else {
           if (userExits.role == 2) {
-            const data = await Contract.find({"createdAt": objfind}).sort({createdAt: -1}).exec()
+            const data = await Contract.find({ "createdAt": objfind }).sort({ createdAt: -1 }).exec()
             return res.status(200).json(data);
           } else {
-            const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).sort({createdAt: -1}).exec()
+            const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).sort({ createdAt: -1 }).exec()
             return res.status(200).json(data);
           }
         }
@@ -39,10 +39,10 @@ export const getContracts = async (req, res) => {
         return res.status(400).json({ "message": "Dữ liệu không đúng" });
       } else {
         if (userExits.role == 2) {
-          const data = await Contract.find({}).sort({createdAt: -1}).exec()
+          const data = await Contract.find({}).sort({ createdAt: -1 }).exec()
           return res.status(200).json(data);
         } else {
-          const data = await Contract.find({ "nguoi_tao_hd": user_id }).sort({createdAt: -1}).exec()
+          const data = await Contract.find({ "nguoi_tao_hd": user_id }).sort({ createdAt: -1 }).exec()
           return res.status(200).json(data);
         }
       }
@@ -55,9 +55,9 @@ export const getContracts = async (req, res) => {
 }
 export const createContracts = async (req, res) => {
   const { ma_hd, ten_khach_hang, cccd, dien_thoai, dia_chi, khoan_vay, lai_xuat } = req.body;
-  const { han_vay, han_tra, ghi_chu, ma_khach_hang ,ngay_vay} = req.body;
+  const { han_vay, han_tra, ghi_chu, ma_khach_hang, ngay_vay, hinh_anh } = req.body;
   const nguoi_tao_hd = req.user.id
-  const time = req.body.ngay_vay;
+  const time = parseInt(req.body.ngay_vay);
   let objData = {};
   let ti_le = lai_xuat / 100;
   if (ten_khach_hang == "" || cccd == "" || dien_thoai == "" || khoan_vay == "" || lai_xuat == "") {
@@ -72,9 +72,10 @@ export const createContracts = async (req, res) => {
   let loi = khoan_vay * ti_le / 365 * parseInt(han_vay)
   let dong_1 = (khoan_vay + loi) / han_vay; //tiền đóng mỗi ngày
   if (han_vay % han_tra == 0) {
-    for (let i = 1; i < parseInt(cout); i++) {
+    for (let i = 0; i < parseInt(cout); i++) {
+      let a = i +1
       let his = {
-        "ngay": time + (i*parseInt(han_tra) * 24 * 60 * 60 * 1000),
+        "ngay": time + (a * parseInt(han_tra) * 24 * 60 * 60 * 1000),
         "tien": dong_1 * parseInt(han_tra),
         "trang_thai": false
       }
@@ -82,10 +83,10 @@ export const createContracts = async (req, res) => {
     }
   } else {
     let du = han_vay / han_tra
-    for (let i = 1; i < parseInt(cout); i++) {
-      a += parseInt(cout)
+    for (let i = 0; i < parseInt(cout); i++) {
+      let a = i +1
       let his = {
-        "ngay": time + (i*parseInt(han_tra) * 24 * 60 * 60 * 1000),
+        "ngay": time + (a * parseInt(han_tra) * 24 * 60 * 60 * 1000),
         "tien": dong_1 * parseInt(han_tra),
         "trang_thai": false
       }
@@ -111,6 +112,7 @@ export const createContracts = async (req, res) => {
   objData.nguoi_tao_hd = nguoi_tao_hd;
   objData.dia_chi = dia_chi;
   objData.ghi_chu = ghi_chu;
+  objData.hinh_anh = hinh_anh;
   objData.tong_hd = khoan_vay + loi;
   objData.han_thanh_toan = arrDong;
   objData.han_hd = time + (han_vay * 24 * 60 * 60 * 1000);
@@ -132,7 +134,6 @@ export const updateContract = async (req, res, next) => {
       let stt = 0;
       for (let i = 0; i < contract.han_thanh_toan.length; i++) {
         let childrenCt = contract.han_thanh_toan[i];
-        console.log(childrenCt);
         newArrTT.push(childrenCt);
         if (childrenCt.ngay == date) {
           childrenCt.trang_thai = status;
@@ -557,8 +558,8 @@ export const turnoverContractMonth = async (req, res) => {
     }
     return res.json({
       tong_sl: count,
-      tong_cho_vay : tong_cho_vay,
-      tong_tien_lai : tong_tien_lai, 
+      tong_cho_vay: tong_cho_vay,
+      tong_tien_lai: tong_tien_lai,
       data: datas
     })
   } catch (error) {
