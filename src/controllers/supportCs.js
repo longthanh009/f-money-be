@@ -58,13 +58,12 @@ export const getSupportCs = async (req, res) => {
     const user_id = req.user.id
     if (user_id) {
         const userExits = await User.findOne({ "_id": user_id }).exec();
-        console.log(userExits);
         if (!userExits) {
             return res.status(200).json({ "error": "Dữ liệu không đúng" });
         } else {
             if (userExits.role === 2) {
                 try {
-                    const data = await SupportCs.find({}).exec();
+                    const data = await SupportCs.find({}).sort({status: -1}).exec();
                     return res.status(200).json(data);
                 } catch (error) {
                     return res.status(400).json({ "error": "Lỗi không thêm được dữ liệu" });
@@ -75,5 +74,13 @@ export const getSupportCs = async (req, res) => {
         }
     } else {
         return res.status(400).json({ "error": "Dữ liệu không đúng" });
+    }
+}
+export const updateSupportCs = async (req, res) => {
+    try {
+        const sp = await SupportCs.findOneAndUpdate({ _id: req.params.id },{status : false}).exec()
+        return res.json(sp)
+    } catch (error) {
+        return res.json(error.message)
     }
 }
