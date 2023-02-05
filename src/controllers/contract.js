@@ -22,19 +22,15 @@ export const getContracts = async (req, res) => {
           return res.status(400).json({ "message": "Dữ liệu không đúng" });
         } else {
           if (userExits.role == 2) {
-            const data = await Contract.find({}).exec().sort({
-              [sort]: asc
-            })
+            const data = await Contract.find({"createdAt": objfind}).sort({createdAt: -1}).exec()
             return res.status(200).json(data);
           } else {
-            const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).exec().sort({
-              [sort]: asc
-            })
+            const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).sort({createdAt: -1}).exec()
             return res.status(200).json(data);
           }
         }
       } catch (error) {
-        res.status(500).json({ "error": "Dữ liệu không đúng hoặc không tồn tại !!" })
+        return res.status(500).json({ "error": "Dữ liệu không đúng hoặc không tồn tại !!" })
       }
     }
     try {
@@ -43,15 +39,15 @@ export const getContracts = async (req, res) => {
         return res.status(400).json({ "message": "Dữ liệu không đúng" });
       } else {
         if (userExits.role == 2) {
-          const data = await Contract.find({}).exec()
+          const data = await Contract.find({}).sort({createdAt: -1}).exec()
           return res.status(200).json(data);
         } else {
-          const data = await Contract.find({ "nguoi_tao_hd": user_id }).exec()
+          const data = await Contract.find({ "nguoi_tao_hd": user_id }).sort({createdAt: -1}).exec()
           return res.status(200).json(data);
         }
       }
     } catch (error) {
-      res.status(500).json({ "error": "Dữ liệu không đúng hoặc không tồn tại !!" })
+      return res.status(500).json({ "error": "Dữ liệu không đúng hoặc không tồn tại !!" })
     }
   } else {
     return res.status(400).json({ "message": "Dữ liệu không đúng" });
