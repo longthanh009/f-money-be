@@ -5,7 +5,7 @@ import { upload } from "../middlewares/fileUpload";
 import { jwtVerifyToken } from "../middlewares/verifyToken";
 const router = express.Router();
 const newUpload = upload();
-router.patch("/contract/:id", jwtVerifyToken, isLender, updateContract);
+router.patch("/contract/:id", jwtVerifyToken, updateContract);
 router.delete("/contract/:id", jwtVerifyToken, isLender, deleteContract);
 router.delete("/contracts/", jwtVerifyToken, isLender, deleteManyContract);
 router.get("/contract/:id", getContract);
