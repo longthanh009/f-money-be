@@ -25,6 +25,7 @@ export const getContracts = async (req, res) => {
             const data = await Contract.find({ "createdAt": objfind }).sort({ createdAt: -1 }).exec()
             return res.status(200).json(data);
           } else {
+            console.log("Đây");
             const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).sort({ createdAt: -1 }).exec()
             return res.status(200).json(data);
           }
@@ -409,8 +410,9 @@ export const autoUpdateContract = async (date) => {
 }
 export const getContractHis = async (req, res) => {
   const code = req.user.code;
+  console.log(code);
   try {
-    const contracts = await Contract.find({ "ma_khach_hang": code }).exec();
+    const contracts = await Contract.find({ "ma_khach_hang": code }).populate({ path: "nguoi_tao_hd", select: "name phone -_id address" }).exec();
     res.status(200).json(contracts);
   } catch (err) {
     res.status(400).json("không tìm thấy Contract")

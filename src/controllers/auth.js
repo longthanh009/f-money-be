@@ -56,6 +56,7 @@ export const Registration = async (req, res, next) => {
   // res.json({ status: "ok" });
   try {
     const users = await Users.find().exec();
+    const role = req.body.role
     const exitsUser = await Users.findOne({ username }).exec()
     const exitsPhone = await Users.findOne({ phone }).exec()
     const exitsEmail = await Users.findOne({ email }).exec()
@@ -64,7 +65,7 @@ export const Registration = async (req, res, next) => {
         message: "Email đã tồn tại"
       })
     }
-    let code = "KH000"+ users.length
+    let code = "KH000" + users.length
     if (exitsUser) {
       return res.status(400).json({
         message: "Tên đăng nhập đã tồn tại"
@@ -81,12 +82,14 @@ export const Registration = async (req, res, next) => {
         error: "Mật khẩu quá ngắn. Mật khẩu phải trên 6 ký tự!",
       });
     }
+    let status = false
+    if (role == 0 || role == 2) status = true
     const salt = bcrypt.genSaltSync(10)
     const hash = bcrypt.hashSync(req.body.password, salt)
-    const newUser = await new Users({ ...req.body, password: hash, "code" : code}).save()
+    const newUser = await new Users({ ...req.body, password: hash, status, "code": code }).save()
     res.status(200).json({
       newUser: {
-        code : code,
+        code: code,
         name: newUser.name,
         password: newUser.password,
         username: newUser.username,
@@ -94,7 +97,7 @@ export const Registration = async (req, res, next) => {
         email: newUser.email,
         CCCD: newUser.CCCD,
         imagePrev: newUser.imagePrev,
-        imageBack:newUser.imageBack,
+        imageBack: newUser.imageBack,
       },
     })
   } catch (error) {
@@ -123,10 +126,11 @@ export const login = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
+        code: user.code
       },
       "sontv", { expiresIn: "7d" }, { algorithm: 'HS256' }
     )
-    const refreshToken = jwt.sign({ id: user._id, username: user.username, email: user.email, role: user.role, }, "sontv", { expiresIn: "365d" }, { algorithm: 'HS256' }
+    const refreshToken = jwt.sign({ id: user._id, username: user.username, email: user.email, role: user.role,code: user.code }, "sontv", { expiresIn: "365d" }, { algorithm: 'HS256' }
     )
     return res.json({
       status: 'Login Success', data: {
@@ -140,7 +144,7 @@ export const login = async (req, res) => {
         address: user.address,
         phone: user.phone,
         activate: user ? user.activate : null,
-        code : user.code ?user.code : ""
+        code: user.code ? user.code : ""
       }
     })
   }
