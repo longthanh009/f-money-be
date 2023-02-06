@@ -87,19 +87,7 @@ export const Registration = async (req, res, next) => {
     const salt = bcrypt.genSaltSync(10)
     const hash = bcrypt.hashSync(req.body.password, salt)
     const newUser = await new Users({ ...req.body, password: hash, status, "code": code }).save()
-    res.status(200).json({
-      newUser: {
-        code: code,
-        name: newUser.name,
-        password: newUser.password,
-        username: newUser.username,
-        phone: newUser.phone,
-        email: newUser.email,
-        CCCD: newUser.CCCD,
-        imagePrev: newUser.imagePrev,
-        imageBack: newUser.imageBack,
-      },
-    })
+    res.status(200).json(newUser)
   } catch (error) {
     return res.status(400).json({
       status: "error",
