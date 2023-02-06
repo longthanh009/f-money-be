@@ -334,7 +334,7 @@ export const turnoverContractMonth = async (req, res) => {
         } else {
             for (let i = 1; i < 13; i++) {
                 let objData = {};
-                const contracts = await Contract.aggregate([{
+                const contracts = await ContractMortgage.aggregate([{
                     $match:
                     {
                         $and: [
@@ -351,7 +351,7 @@ export const turnoverContractMonth = async (req, res) => {
                 for (let i = 0; i < contracts.length; i++) {
                     const contract = contracts[i];
                     turnoverPriceMonth += contract.khoan_vay
-                    turnoverPriceRipMonth += contract.tong_hd
+                    turnoverPriceRipMonth += contract.tong_hd - contract.khoan_vay
                 }
                 tong_cho_vay += turnoverPriceMonth;
                 tong_tien_lai += turnoverPriceRipMonth
