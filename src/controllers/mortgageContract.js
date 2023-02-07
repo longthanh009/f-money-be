@@ -25,7 +25,7 @@ export const create = async (req, res) => {
         ngaykt = new Date().getTime() + (parseInt(han_vay) * 24 * 60 * 60 * 1000);
     }
     try {
-        const data = await ContractMortgage({ ma_hd,ma_khach_hang, ten_khach_hang, cccd, dia_chi, dien_thoai, khoan_vay, phi_dv, han_vay, thong_tin, ghi_chu, nguoi_tao_hd, tong_hd, han_hd: ngaykt,ngay_vay,hinh_anh }).save();
+        const data = await ContractMortgage({ ma_hd, ma_khach_hang, ten_khach_hang, cccd, dia_chi, dien_thoai, khoan_vay, phi_dv, han_vay, thong_tin, ghi_chu, nguoi_tao_hd, tong_hd, han_hd: ngaykt, ngay_vay, hinh_anh }).save();
         res.status(200).json(data);
     } catch (error) {
         res.status(500).json({ "error": "Lỗi không tạo được hợp đồng vay tín chấp" })
@@ -50,10 +50,10 @@ export const getContractMortgages = async (req, res) => {
                     return res.status(400).json({ "message": "Dữ liệu không đúng" });
                 } else {
                     if (userExits.role == 2) {
-                        const data = await ContractMortgage.find({"createdAt": objfind}).sort({createdAt: -1, status : -1}).exec()
+                        const data = await ContractMortgage.find({ "createdAt": objfind }).sort({ createdAt: -1, status: -1 }).exec()
                         return res.status(200).json(data);
                     } else {
-                        const data = await ContractMortgage.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).sort({createdAt: -1,status : -1}).exec()
+                        const data = await ContractMortgage.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).sort({ createdAt: -1, status: -1 }).exec()
                         return res.status(200).json(data);
                     }
                 }
@@ -67,10 +67,10 @@ export const getContractMortgages = async (req, res) => {
                 return res.status(400).json({ "message": "Dữ liệu không đúng" });
             } else {
                 if (userExits.role == 2) {
-                    const data = await ContractMortgage.find({}).sort({createdAt: -1,status : -1}).exec()
+                    const data = await ContractMortgage.find({}).sort({ createdAt: -1, status: -1 }).exec()
                     return res.status(200).json(data);
                 } else {
-                    const data = await ContractMortgage.find({ "nguoi_tao_hd": user_id }).sort({createdAt: -1 , status : -1}).exec()
+                    const data = await ContractMortgage.find({ "nguoi_tao_hd": user_id }).sort({ createdAt: -1, status: -1 }).exec()
                     return res.status(200).json(data);
                 }
             }
@@ -93,7 +93,7 @@ export const getContractMortgage = async (req, res) => {
 export const updateContractMortgage = async (req, res) => {
     console.log(req.params.id);
     try {
-        const sp = await ContractMortgage.findOneAndUpdate({ _id: req.params.id },{status : 2}).exec()
+        const sp = await ContractMortgage.findOneAndUpdate({ _id: req.params.id }, { status: 2 }).exec()
         return res.json(sp)
     } catch (error) {
         return res.json(error.message)
@@ -115,6 +115,15 @@ export const deleteManyMortgage = async (req, res) => {
         res.status(200).json(Mortgage);
     } catch (err) {
         res.status(400).json("Lỗi không xóa được ContractMortgage")
+    }
+}
+export const closeContract = async (req, res, next) => {
+    try {
+        const contract = await ContractMortgage.findOneAndUpdate({ _id: req.params.id }, { status: 3 }).exec();
+        const newNewContract = await ContractMortgage.findOne({ _id: req.params.id }).exec();
+        return res.status(200).json(newNewContract);
+    } catch (err) {
+        return res.status(400).json("Lỗi delete Contract!")
     }
 }
 export const contractsMgExcel = async (req, res, next) => {
@@ -323,7 +332,7 @@ export const turnoverContractMonth = async (req, res) => {
                 for (let i = 0; i < contracts.length; i++) {
                     const contract = contracts[i];
                     turnoverPriceMonth += contract.khoan_vay
-                    turnoverPriceRipMonth += contract.tong_hd -contract.khoan_vay
+                    turnoverPriceRipMonth += contract.tong_hd - contract.khoan_vay
                 }
                 tong_cho_vay += turnoverPriceMonth;
                 tong_tien_lai += turnoverPriceRipMonth

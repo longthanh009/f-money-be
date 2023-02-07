@@ -79,7 +79,8 @@ export const getSupportCs = async (req, res) => {
 export const updateSupportCs = async (req, res) => {
     try {
         const sp = await SupportCs.findOneAndUpdate({ _id: req.params.id },{status : false}).exec()
-        return res.json(sp)
+        const newSp = await SupportCs.findOne({ _id: req.params.id }).exec();
+        return res.json(newSp)
     } catch (error) {
         return res.json(error.message)
     }
