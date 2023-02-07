@@ -145,7 +145,7 @@ export const updateContract = async (req, res, next) => {
           }
         }
       }
-      if (contract.tong_hd == thanh_toan) {
+      if (contract.tong_hd <= thanh_toan) {
         stt = 2
       }
       const newContract = await Contract.findOneAndUpdate({ "_id": id }, { "han_thanh_toan": newArrTT, "da_thanh_toan": thanh_toan, "status": stt }).exec();
