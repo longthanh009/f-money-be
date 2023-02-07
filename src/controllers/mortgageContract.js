@@ -50,10 +50,10 @@ export const getContractMortgages = async (req, res) => {
                     return res.status(400).json({ "message": "Dữ liệu không đúng" });
                 } else {
                     if (userExits.role == 2) {
-                        const data = await ContractMortgage.find({"createdAt": objfind}).sort({createdAt: -1}).exec()
+                        const data = await ContractMortgage.find({"createdAt": objfind}).sort({createdAt: -1, status : -1}).exec()
                         return res.status(200).json(data);
                     } else {
-                        const data = await ContractMortgage.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).sort({createdAt: -1}).exec()
+                        const data = await ContractMortgage.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).sort({createdAt: -1,status : -1}).exec()
                         return res.status(200).json(data);
                     }
                 }
@@ -67,10 +67,10 @@ export const getContractMortgages = async (req, res) => {
                 return res.status(400).json({ "message": "Dữ liệu không đúng" });
             } else {
                 if (userExits.role == 2) {
-                    const data = await ContractMortgage.find({}).sort({createdAt: -1}).exec()
+                    const data = await ContractMortgage.find({}).sort({createdAt: -1,status : -1}).exec()
                     return res.status(200).json(data);
                 } else {
-                    const data = await ContractMortgage.find({ "nguoi_tao_hd": user_id }).sort({createdAt: -1}).exec()
+                    const data = await ContractMortgage.find({ "nguoi_tao_hd": user_id }).sort({createdAt: -1 , status : -1}).exec()
                     return res.status(200).json(data);
                 }
             }

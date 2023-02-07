@@ -22,11 +22,11 @@ export const getContracts = async (req, res) => {
           return res.status(400).json({ "message": "Dữ liệu không đúng" });
         } else {
           if (userExits.role == 2) {
-            const data = await Contract.find({ "createdAt": objfind }).sort({ createdAt: -1 }).exec()
+            const data = await Contract.find({ "createdAt": objfind }).sort({ createdAt: -1 ,status : -1}).exec()
             return res.status(200).json(data);
           } else {
             console.log("Đây");
-            const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).sort({ createdAt: -1 }).exec()
+            const data = await Contract.find({ "nguoi_tao_hd": user_id, "createdAt": objfind }).sort({ createdAt: -1 ,status : -1}).exec()
             return res.status(200).json(data);
           }
         }
@@ -40,10 +40,10 @@ export const getContracts = async (req, res) => {
         return res.status(400).json({ "message": "Dữ liệu không đúng" });
       } else {
         if (userExits.role == 2) {
-          const data = await Contract.find({}).sort({ createdAt: -1 }).exec()
+          const data = await Contract.find({}).sort({ createdAt: -1 , status : -1 }).exec()
           return res.status(200).json(data);
         } else {
-          const data = await Contract.find({ "nguoi_tao_hd": user_id }).sort({ createdAt: -1 }).exec()
+          const data = await Contract.find({ "nguoi_tao_hd": user_id }).sort({ createdAt: -1,status : -1 }).exec()
           return res.status(200).json(data);
         }
       }
@@ -131,7 +131,7 @@ export const updateContract = async (req, res, next) => {
     const contract = await Contract.findOne({ "_id": id }).exec();
     if (contract) {
       let newArrTT = [];
-      let thanh_toan = 0;
+      let thanh_toan = contract.da_thanh_toan;
       let stt = 0;
       for (let i = 0; i < contract.han_thanh_toan.length; i++) {
         let childrenCt = contract.han_thanh_toan[i];
@@ -139,30 +139,32 @@ export const updateContract = async (req, res, next) => {
         if (childrenCt.ngay == date) {
           childrenCt.trang_thai = status;
           if (status == true) {
-            thanh_toan = contract.da_thanh_toan + childrenCt.tien;
+            thanh_toan += childrenCt.tien;
           } else {
-            thanh_toan = contract.da_thanh_toan - childrenCt.tien;
+            thanh_toan += - childrenCt.tien;
           }
         }
       }
       if (contract.tong_hd == thanh_toan) {
         stt = 2
       }
-      const newContract = await Contract.updateOne({ "_id": id }, { "han_thanh_toan": newArrTT, "da_thanh_toan": thanh_toan, "status": stt });
-      res.status(200).json(newContract);
+      const newContract = await Contract.findOneAndUpdate({ "_id": id }, { "han_thanh_toan": newArrTT, "da_thanh_toan": thanh_toan, "status": stt }).exec();
+      const newNewContract = await Contract.findOne({ "_id": id }).exec();
+      return res.status(200).json(newNewContract);
     } else {
-      res.status(400).json("Hợp đồng không tồn tại hoặc đã bị xoá!");
+      return res.status(400).json("Hợp đồng không tồn tại hoặc đã bị xoá!");
     }
   } catch (err) {
     res.status(400).json("Lỗi update Contract!");
   }
 }
-export const deleteContract = async (req, res, next) => {
+export const closeContract = async (req, res, next) => {
   try {
-    const contract = await Contract.findByIdAndDelete(req.params.id);
-    res.status(200).json(contract);
+    const contract = await Contract.findOneAndUpdate({_id :req.params.id},{status : 3}).exec();
+    const newNewContract = await Contract.findOne({ _id: req.params.id }).exec();
+    return res.status(200).json(newNewContract);
   } catch (err) {
-    res.status(400).json("Lỗi delete Contract!")
+    return res.status(400).json("Lỗi delete Contract!")
   }
 }
 export const getContract = async (req, res, next) => {
